@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>충남더힐 이웃정</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+/* layout: 기관 홈페이지형 — 유틸바 / 로고+GNB / 메인비주얼 / 퀵메뉴 / 게시판 3단 / 푸터. 서브페이지는 서브비주얼+LNB+본문 */
+:root{
+  --navy:#17305a;
+  --blue:#2456a6;
+  --ink:#222831;
+  --muted:#6b7280;
+  --line:#d9dde3;
+  --soft:#f4f6f9;
+  --point:#d9661f;
+  --font:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  color-scheme:light;
+}
+html{font-size:100%}
+html.big{font-size:118%}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:#fff;color:var(--ink);font-family:var(--font);font-size:.95rem;line-height:1.6;letter-spacing:-.01em}
+h1,h2,h3,h4{margin:0;text-wrap:balance}
+p{margin:0}
+a{color:inherit;text-decoration:none}
+ul{list-style:none;margin:0;padding:0}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.num{font-variant-numeric:tabular-nums}
+.wrap{max-width:1200px;margin:0 auto;padding:0 20px}
+
+/* ===== 로그인 ===== */
+#login{min-height:100%;display:grid;grid-template-rows:1fr auto;background:#0d1a30 url(bg.jpg) center/cover no-repeat;position:relative}
+#login::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(10,22,44,.78) 0%,rgba(10,22,44,.45) 55%,rgba(10,22,44,.2) 100%)}
+.login-in{position:relative;display:grid;grid-template-columns:1fr 400px;gap:40px;align-items:center;max-width:1200px;width:100%;margin:0 auto;padding:48px 20px}
+.login-copy{color:#fff;display:grid;gap:14px}
+.login-copy small{font-size:.85rem;letter-spacing:.2em;opacity:.85}
+.login-copy h1{font-size:2.6rem;font-weight:900;line-height:1.25}
+.login-copy p{opacity:.88;max-width:34ch}
+.login-box{background:#fff;padding:36px 32px;display:grid;gap:16px;border-top:4px solid var(--blue);box-shadow:0 10px 30px rgba(0,0,0,.3)}
+.login-box h2{font-size:1.3rem;font-weight:700;display:flex;align-items:center;justify-content:space-between}
+.login-box h2 span{font-size:.75rem;font-weight:400;color:var(--muted)}
+.lb-tabs{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--line)}
+.lb-tabs span{text-align:center;padding:8px 0;font-size:.9rem;color:var(--muted)}
+.lb-tabs span.on{color:var(--blue);font-weight:700;border-bottom:2px solid var(--blue);margin-bottom:-1px}
+.f{display:grid;gap:4px}
+.f label{font-size:.85rem;font-weight:500}
+.f input,.f select,.f textarea{border:1px solid #c5ccd6;padding:10px 12px;width:100%;background:#fff;border-radius:0}
+.f input:focus,.f select:focus,.f textarea:focus{border-color:var(--blue);outline:none}
+.r2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sfx{position:relative}.sfx input{padding-right:34px}
+.sfx b{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-weight:400;color:var(--muted);font-size:.9rem}
+.chk{display:flex;align-items:center;gap:6px;font-size:.85rem;color:var(--muted)}
+.btn{border:1px solid var(--blue);background:var(--blue);color:#fff;padding:10px 18px;font-weight:500;border-radius:0}
+.btn:hover{background:var(--navy);border-color:var(--navy)}
+.btn.line{background:#fff;color:var(--ink);border-color:#b8c0cc}
+.btn.line:hover{background:var(--soft)}
+.btn.sm{padding:5px 12px;font-size:.85rem}
+.btn.lg{padding:13px;font-size:1.02rem;font-weight:700}
+.btn:disabled{background:#e5e7eb;border-color:#e5e7eb;color:#9ca3af;cursor:default}
+.err{color:#c0392b;font-size:.85rem;min-height:1.2em}
+.lb-links{display:flex;justify-content:center;gap:0;font-size:.82rem;color:var(--muted)}
+.lb-links span+span::before{content:"|";margin:0 10px;color:#ccd}
+.lb-note{background:var(--soft);padding:10px 12px;font-size:.8rem;color:var(--muted)}
+.login-foot{position:relative;color:#cbd5e1;font-size:.78rem;text-align:center;padding:14px;background:rgba(0,0,0,.35)}
+@media (max-width:860px){.login-in{grid-template-columns:1fr}.login-copy h1{font-size:1.9rem}}
+
+/* ===== 헤더 ===== */
+#app{display:none}
+.util{background:var(--navy);color:#c9d4e6;font-size:.8rem}
+.util .wrap{display:flex;justify-content:space-between;align-items:center;height:34px;gap:12px}
+.util ul{display:flex;gap:0}
+.util li+li::before{content:"|";margin:0 10px;color:#4a5f85}
+.util button{background:none;border:0;color:inherit;padding:0;font-size:inherit}
+.util button:hover{color:#fff}
+.util b{color:#fff;font-weight:500}
+header.hd{border-bottom:1px solid var(--line);background:#fff;position:relative;z-index:10}
+.hd .wrap{display:flex;align-items:center;height:84px;gap:30px}
+.logo{display:flex;align-items:center;gap:10px;background:none;border:0;padding:0}
+.logo svg{flex:none}
+.logo .tx{display:grid;text-align:left;line-height:1.15}
+.logo .tx b{font-size:1.45rem;font-weight:900;color:var(--navy);letter-spacing:-.03em}
+.logo .tx small{font-size:.66rem;color:var(--muted);letter-spacing:.12em}
+.gnb{display:flex;margin-left:auto;height:100%}
+.gnb>li{position:relative;height:100%}
+.gnb>li>button{height:100%;background:none;border:0;padding:0 17px;font-size:1.05rem;font-weight:700;color:var(--ink);border-bottom:3px solid transparent}
+.gnb>li>button.on,.gnb>li:hover>button{color:var(--blue);border-bottom-color:var(--blue)}
+.gnb .dep2{display:none;position:absolute;top:100%;left:50%;transform:translateX(-50%);min-width:150px;background:#fff;border:1px solid var(--line);border-top:2px solid var(--blue);padding:8px 0;box-shadow:0 6px 14px rgba(0,0,0,.08)}
+.gnb>li:hover .dep2,.gnb>li:focus-within .dep2{display:block}
+.dep2 button{display:block;width:100%;text-align:center;background:none;border:0;padding:7px 14px;font-size:.88rem;color:#444}
+.dep2 button:hover{color:var(--blue);background:var(--soft)}
+@media (max-width:980px){.hd .wrap{height:auto;flex-wrap:wrap;padding-top:12px;gap:8px}.gnb{margin-left:0;width:100%;overflow-x:auto}.gnb>li>button{padding:12px 12px;font-size:.95rem}.gnb .dep2{display:none!important}}
+
+/* ===== 메인 ===== */
+.mv{height:440px;background:#0d1a30 url(bg.jpg) center 40%/cover no-repeat;position:relative;color:#fff}
+.mv::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(10,22,44,.6),rgba(10,22,44,.05) 70%)}
+.mv .wrap{position:relative;height:100%;display:grid;align-content:center;gap:12px}
+.mv small{font-size:.85rem;letter-spacing:.18em;opacity:.9}
+.mv h2{font-size:2.5rem;font-weight:900;line-height:1.3}
+.mv p{max-width:40ch;opacity:.92}
+.mv .dots{display:flex;gap:6px;margin-top:10px}
+.mv .dots i{width:28px;height:3px;background:rgba(255,255,255,.45)}
+.mv .dots i:first-child{background:#fff}
+@media (max-width:700px){.mv{height:320px}.mv h2{font-size:1.7rem}}
+
+.quick{position:relative;margin-top:-56px;z-index:2}
+.quick ul{display:grid;grid-template-columns:repeat(6,1fr);background:#fff;border:1px solid var(--line);box-shadow:0 6px 18px rgba(0,0,0,.08)}
+.quick li+li{border-left:1px solid var(--line)}
+.quick button{width:100%;background:none;border:0;padding:20px 6px 16px;display:grid;justify-items:center;gap:8px;font-size:.9rem;font-weight:500}
+.quick button:hover{background:var(--soft);color:var(--blue)}
+.quick svg{width:38px;height:38px;stroke:var(--blue);fill:none;stroke-width:1.6}
+@media (max-width:700px){.quick ul{grid-template-columns:repeat(3,1fr)}.quick li:nth-child(4){border-left:0}.quick li:nth-child(n+4){border-top:1px solid var(--line)}}
+
+.main-sec{padding:48px 0 20px}
+.cols{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:28px}
+@media (max-width:980px){.cols{grid-template-columns:1fr}}
+.box-h{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid var(--ink);padding-bottom:8px;margin-bottom:6px}
+.box-h h3{font-size:1.2rem;font-weight:700}
+.more{background:none;border:0;padding:0;font-size:1.3rem;line-height:1;color:var(--muted)}
+.more:hover{color:var(--blue)}
+.btabs{display:flex;gap:14px;flex-wrap:wrap}
+.btabs button{background:none;border:0;padding:0;font-size:1rem;font-weight:700;color:#aab}
+.btabs button.on{color:var(--ink)}
+.nlist li{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px dotted #d4d8de;font-size:.92rem}
+.nlist li span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nlist li .dt{color:var(--muted);font-size:.84rem;flex:none}
+.nlist button{background:none;border:0;padding:0;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nlist button:hover{text-decoration:underline}
+.cat{display:inline-block;font-size:.72rem;padding:1px 6px;margin-right:6px;border:1px solid currentColor;color:var(--blue);vertical-align:1px}
+.cat.o{color:var(--point)}.cat.g{color:#6b7280}
+.new{display:inline-block;font-size:.65rem;background:var(--point);color:#fff;padding:0 4px;margin-left:4px;vertical-align:2px}
+
+.evcard{border:1px solid var(--line);display:grid}
+.evcard .ph{height:120px;background:url(bg.jpg) 70% 60%/cover;position:relative}
+.evcard .ph span{position:absolute;left:12px;top:12px;background:var(--point);color:#fff;font-size:.75rem;padding:2px 8px}
+.evcard .bd{padding:14px 16px;display:grid;gap:6px}
+.evcard h4{font-size:1.05rem}
+.evcard dl{margin:0;display:grid;grid-template-columns:44px 1fr;gap:2px 8px;font-size:.86rem}
+.evcard dt{color:var(--muted)}.evcard dd{margin:0}
+
+.mcal{width:100%;border-collapse:collapse;font-size:.82rem;text-align:center}
+.mcal th{font-weight:500;color:var(--muted);padding:6px 0;border-bottom:1px solid var(--line)}
+.mcal td{padding:5px 0;height:32px}
+.mcal td.ev b{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--blue);color:#fff;font-weight:500}
+.mcal td.today b{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;border:1px solid var(--blue);color:var(--blue)}
+.mcal .sun{color:#d33}.mcal .sat{color:var(--blue)}
+.mcal-list li{display:flex;gap:10px;font-size:.86rem;padding:5px 0;border-bottom:1px dotted #d4d8de}
+.mcal-list b{color:var(--blue);font-weight:700;width:46px;flex:none}
+
+.gal-sec{background:var(--soft);padding:40px 0;margin-top:40px}
+.gal{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+@media (max-width:860px){.gal{grid-template-columns:repeat(2,1fr)}}
+.gal li{background:#fff;border:1px solid var(--line)}
+.gal .th{aspect-ratio:4/3;background-image:url(bg.jpg);background-size:340%}
+.gal .cp{padding:10px 12px;font-size:.88rem;display:grid}
+.gal .cp span{color:var(--muted);font-size:.8rem}
+
+.banners{padding:28px 0 48px;display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+@media (max-width:860px){.banners{grid-template-columns:repeat(2,1fr)}}
+.banners button{border:1px solid var(--line);background:#fff;padding:16px;text-align:left;display:grid;gap:2px}
+.banners button:hover{border-color:var(--blue)}
+.banners b{font-size:.95rem}.banners span{font-size:.8rem;color:var(--muted)}
+
+/* ===== 서브 ===== */
+.sv{height:200px;background:#0d1a30 url(bg.jpg) center 45%/cover;position:relative;color:#fff}
+.sv::before{content:"";position:absolute;inset:0;background:rgba(13,30,60,.55)}
+.sv .wrap{position:relative;height:100%;display:grid;align-content:center;justify-items:center;gap:6px;text-align:center}
+.sv h2{font-size:2rem;font-weight:700}
+.sv p{opacity:.85;font-size:.9rem}
+.sub{display:grid;grid-template-columns:220px 1fr;gap:44px;padding:44px 20px 70px}
+@media (max-width:860px){.sub{grid-template-columns:1fr;gap:20px}}
+.lnb h3{background:var(--navy);color:#fff;font-size:1.2rem;padding:26px 18px;font-weight:700}
+.lnb ul{border:1px solid var(--line);border-top:0}
+.lnb li+li{border-top:1px solid var(--line)}
+.lnb button{width:100%;text-align:left;background:#fff;border:0;padding:13px 18px;font-size:.93rem;display:flex;justify-content:space-between}
+.lnb button::after{content:"›";color:#aaa}
+.lnb button.on{color:var(--blue);font-weight:700;background:var(--soft)}
+.lnb .call{margin-top:16px;border:1px solid var(--line);padding:16px 18px;font-size:.85rem;display:grid;gap:2px}
+.lnb .call b{font-size:1.2rem;color:var(--navy)}
+@media (max-width:860px){.lnb ul{display:flex;overflow-x:auto}.lnb li+li{border-top:0;border-left:1px solid var(--line)}.lnb button{white-space:nowrap}.lnb .call,.lnb h3{display:none}}
+.cont-h{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:1px solid var(--ink);padding-bottom:14px;margin-bottom:28px;gap:12px;flex-wrap:wrap}
+.cont-h h3{font-size:1.65rem;font-weight:700}
+.loc{font-size:.8rem;color:var(--muted)}
+.loc b{color:var(--ink);font-weight:500}
+.cont{display:grid;gap:34px;align-content:start;min-width:0}
+.sect{display:grid;gap:12px}
+.sect>h4{font-size:1.15rem;font-weight:700;padding-left:12px;border-left:4px solid var(--blue);line-height:1.2}
+.desc{color:#555}
+.intro{border:1px solid var(--line);background:var(--soft);padding:18px 20px;display:grid;gap:4px}
+
+/* 표 */
+.tbl-wrap{overflow-x:auto}
+table.tbl{width:100%;border-collapse:collapse;border-top:2px solid var(--ink);font-size:.9rem;min-width:560px}
+.tbl th{background:var(--soft);font-weight:500;padding:11px 8px;border-bottom:1px solid var(--line)}
+.tbl td{padding:11px 8px;border-bottom:1px solid var(--line);text-align:center}
+.tbl td.l{text-align:left}
+.tbl tr.mine td{background:#eef4ff}
+.tbl tr.open td{background:#fffaf3}
+.tbl .tt{background:none;border:0;padding:0;text-align:left}
+.tbl .tt:hover{text-decoration:underline;color:var(--blue)}
+.st{font-size:.78rem;padding:2px 8px;border:1px solid;display:inline-block;white-space:nowrap}
+.st.ok{color:#2b7a3d}.st.wait{color:var(--point)}.st.end{color:#888}
+.bbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.bbar .tot{font-size:.88rem}.bbar .tot b{color:var(--blue)}
+.srch{display:flex;gap:4px}
+.srch select,.srch input{border:1px solid #c5ccd6;padding:6px 8px;font-size:.85rem}
+.srch input{width:180px}
+.paging{display:flex;justify-content:center;gap:4px;margin-top:6px}
+.paging span{width:30px;height:30px;display:grid;place-items:center;border:1px solid var(--line);font-size:.85rem}
+.paging span.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+
+/* 행사 달력 */
+.cal{width:100%;border-collapse:collapse;table-layout:fixed;border-top:2px solid var(--ink)}
+.cal th{background:var(--soft);font-weight:500;padding:8px;border:1px solid var(--line);font-size:.88rem}
+.cal td{border:1px solid var(--line);height:84px;vertical-align:top;padding:6px;font-size:.82rem}
+.cal td .n{font-weight:500}
+.cal td.today{background:#f3f7ff}
+.cal td.today .n::after{content:" 오늘";color:var(--blue);font-size:.72rem}
+.cal .evb{display:block;width:100%;margin-top:4px;text-align:left;border:0;padding:3px 6px;font-size:.76rem;line-height:1.35;background:var(--blue);color:#fff}
+.cal .evb.past{background:#9aa3af}
+.cal .evb.sel{outline:2px solid var(--point);outline-offset:1px}
+.cal .sun{color:#d33}.cal .sat{color:var(--blue)}
+@media (max-width:600px){.cal td{height:60px;padding:3px}.cal .evb{font-size:.64rem;padding:2px}}
+.evinfo{display:grid;grid-template-columns:240px 1fr;border:1px solid var(--line)}
+.evinfo .ph{background:url(bg.jpg) 60% 55%/cover;min-height:180px}
+.evinfo .bd{padding:20px 22px;display:grid;gap:10px;align-content:start}
+.evinfo h5{font-size:1.25rem;margin:0}
+.evinfo dl{margin:0;display:grid;grid-template-columns:70px 1fr;gap:4px 10px;font-size:.9rem}
+.evinfo dt{color:var(--muted)}.evinfo dd{margin:0}
+@media (max-width:700px){.evinfo{grid-template-columns:1fr}}
+.prog{height:8px;background:#e5e7eb}.prog i{display:block;height:100%;background:var(--blue)}
+
+/* 투표, 갤러리, 카드 */
+.vote li{border:1px solid var(--line);margin-bottom:-1px}
+.vote button{width:100%;background:#fff;border:0;padding:14px 16px;display:grid;grid-template-columns:22px 1fr auto;gap:6px 10px;align-items:center;text-align:left}
+.vote button .rd{width:16px;height:16px;border:1px solid #999;border-radius:50%}
+.vote button.on .rd{border:5px solid var(--blue)}
+.vote .bar{grid-column:2/-1;height:6px;background:#eceef1}.vote .bar i{display:block;height:100%;background:var(--blue)}
+.pgal{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+@media (max-width:700px){.pgal{grid-template-columns:1fr 1fr}}
+.pgal li{border:1px solid var(--line)}
+.pgal .th{aspect-ratio:4/3;background-image:url(bg.jpg);background-size:320%}
+.pgal .cp{padding:10px 12px;font-size:.88rem;display:grid;gap:2px}
+.pgal .cp span{font-size:.8rem;color:var(--muted)}
+.clubtbl td:nth-child(2){font-weight:500}
+.rankbar{height:10px;background:#eceef1;min-width:80px}.rankbar i{display:block;height:100%;background:var(--blue)}
+tr.mine .rankbar i{background:var(--point)}
+.ptbox{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line)}
+.ptbox div{padding:20px;text-align:center;display:grid;gap:4px}
+.ptbox div+div{border-left:1px solid var(--line)}
+.ptbox b{font-size:1.8rem;color:var(--navy)}
+.ptbox span{font-size:.85rem;color:var(--muted)}
+.view{border-top:2px solid var(--ink)}
+.view .vh{padding:16px 10px;border-bottom:1px solid var(--line);display:grid;gap:6px}
+.view .vh h5{font-size:1.15rem;margin:0}
+.view .vh p{font-size:.84rem;color:var(--muted)}
+.view .vb{padding:28px 10px;min-height:160px;border-bottom:1px solid var(--line)}
+.setrow{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 4px;border-bottom:1px solid var(--line)}
+.setrow span small{display:block;color:var(--muted);font-size:.82rem}
+.sw{width:44px;height:24px;border-radius:12px;background:#c7cdd6;border:0;position:relative;flex:none}
+.sw::after{content:"";position:absolute;left:3px;top:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left .15s}
+.sw[aria-checked="true"]{background:var(--blue)}.sw[aria-checked="true"]::after{left:23px}
+.btns{display:flex;gap:6px;justify-content:flex-end}
+
+.live{font-size:.78rem;color:var(--muted);margin-left:10px;font-weight:400}
+.live.on{color:#2b7a3d}.live.err{color:#c0392b}
+.cmts{border:1px solid var(--line);background:var(--soft);padding:18px 20px;display:grid;gap:12px}
+.cmts h5{font-size:1rem;margin:0}.cmts h5 b{color:var(--blue)}
+.cmts ul{display:grid;gap:0}
+.cmts li{background:#fff;border:1px solid var(--line);padding:12px 14px;margin-bottom:-1px;display:grid;gap:4px}
+.cmts li.staff{border-left:3px solid var(--blue);background:#f7faff}
+.cmts li.mine{background:#fffaf3}
+.cmts li.empty{color:var(--muted);font-size:.88rem}
+.cmts .ch{display:flex;align-items:center;gap:8px;font-size:.85rem}
+.cmts .ch span.num{margin-left:auto;color:var(--muted);font-size:.78rem}
+.cmts p{font-size:.92rem;white-space:pre-wrap}
+.cform{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:4px}
+.cform textarea{border:1px solid #c5ccd6;padding:10px 12px;resize:vertical;background:#fff}
+.cform textarea:focus{border-color:var(--blue);outline:none}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+@media (max-width:600px){.cform{grid-template-columns:1fr}}
+/* 푸터 */
+footer.ft{background:#2b2f36;color:#a7adb7;font-size:.82rem}
+.ft .links{border-bottom:1px solid #3c414a}
+.ft .links .wrap{display:flex;gap:22px;height:48px;align-items:center;flex-wrap:wrap}
+.ft .links b{color:#fff;font-weight:500}
+.ft .info{padding:24px 20px 32px;display:grid;gap:4px}
+.ft .info strong{color:#fff;font-size:1rem}
+
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#222831;color:#fff;padding:10px 20px;font-size:.88rem;opacity:0;pointer-events:none;transition:opacity .2s;z-index:30}
+#toast.on{opacity:1}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;place-items:center;padding:16px;z-index:25}
+.modal.on{display:grid}
+.modal form{background:#fff;width:100%;max-width:460px;border-top:3px solid var(--blue);padding:24px;display:grid;gap:14px}
+.modal h5{font-size:1.15rem;margin:0}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<!-- ============ 로그인 ============ -->
+<section id="login">
+  <div class="login-in">
+    <div class="login-copy">
+      <small>CHUNGNAM THE HILL COMMUNITY</small>
+      <h1>이웃과 정(情)을 나누는<br>충남더힐 주민 커뮤니티</h1>
+      <p>충남더힐 입주 세대만 이용할 수 있는 공간입니다. 동 행사, 나눔, 소모임 소식을 이곳에서 확인하세요.</p>
+    </div>
+    <form class="login-box" id="loginForm" novalidate>
+      <h2>세대 로그인 <span>MEMBER LOGIN</span></h2>
+      <div class="lb-tabs"><span class="on">입주민</span><span>관리사무소</span></div>
+      <div class="r2">
+        <div class="f"><label for="inDong">동</label><div class="sfx"><input id="inDong" inputmode="numeric" autocomplete="off"><b>동</b></div></div>
+        <div class="f"><label for="inHo">호수</label><div class="sfx"><input id="inHo" inputmode="numeric" autocomplete="off"><b>호</b></div></div>
+      </div>
+      <div class="f"><label for="inPw">비밀번호</label><input id="inPw" type="password" autocomplete="off"></div>
+      <label class="chk" for="saveId"><input type="checkbox" id="saveId"> 동·호수 저장</label>
+      <p class="err" id="loginErr" role="alert"></p>
+      <button class="btn lg" type="submit">로그인</button>
+      <div class="lb-links"><span>세대 인증 신청</span><span>비밀번호 찾기</span><span>이용 안내</span></div>
+      <p class="lb-note">시연용 계정: 102동 102호 / 비밀번호 1234</p>
+    </form>
+  </div>
+  <div class="login-foot">충남더힐 입주자대표회의 · 관리사무소 TEL 031-000-1234 · 본 사이트는 디자인씽킹 수업 프로토타입입니다.</div>
+</section>
+
+<!-- ============ 본 사이트 ============ -->
+<div id="app">
+  <div class="util"><div class="wrap">
+    <span>충남더힐 아파트 입주민 전용 커뮤니티</span>
+    <ul><li><b id="whoName">102동 102호</b>님</li><li>정 포인트 <b id="whoPt" class="num">0</b></li><li><button data-nav="my">마이페이지</button></li><li><button id="logout">로그아웃</button></li></ul>
+  </div></div>
+  <header class="hd"><div class="wrap">
+    <button class="logo" data-nav="home" aria-label="충남더힐 홈">
+      <svg width="42" height="42" viewBox="0 0 42 42" aria-hidden="true"><rect x="4" y="14" width="12" height="24" fill="#17305a"/><rect x="18" y="6" width="12" height="32" fill="#2456a6"/><rect x="32" y="18" width="7" height="20" fill="#7aa2dc"/><g fill="#fff"><rect x="7" y="18" width="2" height="2"/><rect x="11" y="18" width="2" height="2"/><rect x="7" y="23" width="2" height="2"/><rect x="11" y="23" width="2" height="2"/><rect x="21" y="10" width="2" height="2"/><rect x="25" y="10" width="2" height="2"/><rect x="21" y="15" width="2" height="2"/><rect x="25" y="15" width="2" height="2"/><rect x="21" y="20" width="2" height="2"/><rect x="25" y="20" width="2" height="2"/></g><path d="M2 38h38" stroke="#17305a" stroke-width="2"/></svg>
+      <span class="tx"><b>충남더힐</b><small>이웃정 커뮤니티</small></span>
+    </button>
+    <ul class="gnb" id="gnb"></ul>
+  </div></header>
+  <main id="view"></main>
+  <footer class="ft">
+    <div class="links"><div class="wrap"><b>개인정보처리방침</b><span>이용약관</span><span>커뮤니티 운영규칙</span><span>관리사무소 안내</span></div></div>
+    <div class="wrap info">
+      <strong>충남더힐 아파트</strong>
+      <span>대전광역시 유성구 ○○로 00 · 관리사무소 TEL 031-000-1234 · FAX 031-000-1235</span>
+      <span>운영: 충남더힐 입주자대표회의 · 이웃정 운영위원회 (디자인씽킹과 교육 혁신 2조)</span>
+      <span>COPYRIGHT © CHUNGNAM THE HILL. ALL RIGHTS RESERVED.</span>
+    </div>
+  </footer>
+</div>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true"></div>
+<div id="toast" role="status"></div>
+
+<script src="supabase-config.js"></script>
+<script>
+const ACCOUNT={dong:"102",ho:"102",pw:"1234"};
+const MENU=[
+  {id:"news",t:"단지소식",d:"충남더힐의 공지와 소식을 전해드립니다",subs:[["notice","공지사항"],["newcomer","새 이웃 소개"]]},
+  {id:"events",t:"동 행사",d:"매주 토요일, 한 동씩 돌아가며 여는 주민 행사",subs:[["month","이달의 행사"],["program","행사 진행 안내"],["review","행사 후기"],["vote","다음 행사 투표"]]},
+  {id:"share",t:"나눔·품앗이",d:"남는 것은 나누고, 필요한 도움은 부탁해요",subs:[["전체","전체"],["나눔","나눔"],["품앗이","품앗이"],["공동구매","공동구매"]]},
+  {id:"clubs",t:"소모임",d:"같은 단지 이웃과 함께하는 모임",subs:[["list","소모임 목록"]]},
+  {id:"suggest",t:"건의함",d:"주민 여러분의 의견을 듣고 답변드립니다",subs:[["전체","전체"],["시설","시설"],["행사","행사"],["커뮤니티","커뮤니티"],["기타","기타"]]},
+  {id:"points",t:"정(情) 포인트",d:"이웃과 정을 나눌수록 쌓이는 포인트",subs:[["rank","동별 순위"],["mine","내 포인트"],["guide","적립 안내"]]},
+  {id:"my",t:"마이페이지",d:"나의 이웃 활동과 설정",subs:[["act","나의 활동"],["set","공개 범위·화면 설정"]]},
+];
+const S={
+  user:null,view:"home",sub:null,points:120,selEvent:"e2",homeTab:0,postView:null,noticeView:null,
+  history:[
+    {d:"2026.11.07",t:"207동 푸드트럭 데이 손님 참여",p:10},
+    {d:"2026.11.02",t:"나눔 게시판: 아기 바운서 나눔",p:20},
+    {d:"2026.10.24",t:"101동 야시장 후기 작성",p:10},
+    {d:"2026.10.12",t:"신규 입주민 환영 인사",p:5},
+  ],
+  notices:[
+    {c:"공지",t:"102동 엘리베이터 정기 점검 안내 (11/13 10:00~12:00)",d:"2026.11.11",v:84,w:"관리사무소",b:"11월 13일(목) 오전 10시부터 12시까지 102동 1·2호기 엘리베이터 정기 점검이 있습니다. 점검 시간에는 계단을 이용해 주시기 바랍니다."},
+    {c:"행사",t:"[102동] 11월 14일 이웃 한 상 행사 역할 모집",d:"2026.11.09",v:152,w:"이웃정 운영위",b:"이번 주 토요일은 102동이 주관하는 '이웃 한 상' 행사가 열립니다. 동 행사 > 이달의 행사 메뉴에서 비어 있는 역할을 신청해 주세요."},
+    {c:"행사",t:"207동 푸드트럭 데이 후기 사진 게시",d:"2026.11.08",v:97,w:"이웃정 운영위",b:"지난 11월 7일 207동 푸드트럭 데이에 참여해 주신 모든 이웃께 감사드립니다. 행사 후기 게시판에서 사진을 확인하세요."},
+    {c:"공지",t:"겨울철 수도 동파 예방 안내",d:"2026.11.06",v:63,w:"관리사무소",b:"기온이 영하로 내려가는 날에는 수도꼭지를 조금 열어 두시고, 계량기함 보온재 상태를 확인해 주세요."},
+    {c:"투표",t:"12월 201동 행사 주제 투표 진행 (~11/20)",d:"2026.11.05",v:121,w:"이웃정 운영위",b:"12월 첫째 주 201동 행사 주제를 정하는 투표가 진행 중입니다. 다른 동 주민도 투표할 수 있습니다."},
+    {c:"공지",t:"재활용 분리배출 요일 변경 (매주 화·금)",d:"2026.11.01",v:205,w:"관리사무소",b:"11월부터 재활용 분리배출 요일이 매주 화요일과 금요일로 변경됩니다."},
+    {c:"공지",t:"커뮤니티룸 예약 방법 변경 안내",d:"2026.10.28",v:77,w:"관리사무소",b:"커뮤니티룸 예약은 이제 관리사무소 방문 없이 소모임 메뉴에서 신청할 수 있습니다."},
+  ],
+  events:{
+    e1:{id:"e1",date:7,dong:"207동",title:"207동 푸드트럭 데이",place:"207동 앞 광장",time:"11월 7일(토) 17:00~20:00",status:"done",
+      roles:[["101호","떡볶이",1],["102호","떡볶이",1],["202호","회오리감자",1],["305호","어묵꼬치",1],["401호","붕어빵",1],["503호","음료·식혜",1]]},
+    e2:{id:"e2",date:14,dong:"102동",title:"102동 이웃 한 상",place:"102동 옆 어린이 놀이터",time:"11월 14일(토) 16:00~19:00",status:"open",
+      roles:[["101호","장터 · 수제 쿠키",1],["201호","장터 · 아이 옷·장난감 나눔",1],["302호","한 상 · 따뜻한 어묵탕",1],["501호","오프닝 진행",1],[null,"장터 · 음료 부스 (유자차·핫초코)",0],[null,"이웃 빙고 운영",0],[null,"층별 대항전 심판",0],[null,"사진 기록",0],[null,"마감 정리·분리수거",0]]},
+    e3:{id:"e3",date:21,dong:"105동",title:"105동 야시장",place:"105동 필로티",time:"11월 21일(토) 18:00~21:00",status:"soon",
+      roles:[["103호","호떡",1],["204호","닭꼬치",1],["601호","핸드메이드 액세서리",1],[null,"조명·전구 설치",0]]},
+    e4:{id:"e4",date:28,dong:"203동",title:"203동 김장 나눔",place:"203동 커뮤니티룸",time:"11월 28일(토) 10:00~14:00",status:"soon",
+      roles:[["102호","절임배추 준비",1],["301호","양념 만들기",1],[null,"수육 삶기",0],[null,"포장·배달 (어르신 세대)",0]]},
+  },
+  going:{},
+  votes:[{t:"201동 크리스마스 마켓",n:48},{t:"201동 영화 상영의 밤",n:31},{t:"201동 보드게임 대회",n:17}],myVote:null,
+  clubs:[
+    {n:"더힐 새벽 러닝",w:"화·목 06:30",p:"단지 둘레길 3km",m:12,max:20,joined:false,tag:"운동"},
+    {n:"한 달 한 권 독서 모임",w:"매월 마지막 금 20:00",p:"커뮤니티룸",m:8,max:10,joined:false,tag:"취미"},
+    {n:"금요 보드게임",w:"격주 금 19:30",p:"102동 작은도서관",m:6,max:12,joined:false,tag:"취미"},
+    {n:"공동육아 놀이터 모임",w:"토 10:00",p:"102동 옆 놀이터",m:15,max:25,joined:false,tag:"육아"},
+    {n:"반려견 산책 메이트",w:"매일 21:00",p:"정문 앞 집결",m:9,max:15,joined:false,tag:"반려동물"},
+    {n:"1인 가구 반찬 나눔",w:"격주 일 17:00",p:"커뮤니티룸",m:7,max:12,joined:false,tag:"청년"},
+  ],
+  dongs:{"101동":540,"102동":0,"105동":610,"106동":380,"201동":455,"203동":505,"207동":720},
+  settings:{showHo:true,showClubs:true,alarm:true,big:false},
+};
+const DONG_BASE=470;
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const me=()=>S.user.ho+" (나)";
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove("on"),2200)}
+function addPoints(p,t){S.points+=p;S.history.unshift({d:"2026.11.11",t,p});updateTop();toast(`${t} · 정 포인트 +${p}`)}
+function subPoints(p){S.points-=p;S.history.shift();updateTop()}
+function updateTop(){$("#whoPt").textContent=S.points;S.dongs["102동"]=DONG_BASE+S.points}
+function rankOf(d){return Object.entries(S.dongs).sort((a,b)=>b[1]-a[1]).findIndex(x=>x[0]===d)+1}
+
+/* =====================================================================
+   실시간 게시판 (나눔·품앗이, 건의함)
+   - supabase-config.js 에 Supabase 설정이 있으면: Supabase 실시간 모드
+     (다른 사람이 쓴 글·댓글이 새로고침 없이 바로 보임)
+   - 설정이 없으면: 체험 모드 (이 브라우저 안에서만 저장, 같은 브라우저의 다른 탭과는 실시간 동기화)
+   ===================================================================== */
+const T=(y,m,d,h=12)=>new Date(y,m-1,d,h).getTime();
+const SEED_POSTS=[
+  {id:"s1",board:"share",cat:"나눔",title:"유아용 바운서 드려요 (상태 좋아요)",author:"104동 802호",ts:T(2026,11,11,9),body:"아이가 커서 더 이상 안 써요. 102동 경비실 앞에서 전달해 드릴게요.",done:false},
+  {id:"s2",board:"share",cat:"품앗이",title:"이번 주 택배 대신 받아주실 분 계실까요?",author:"102동 504호",ts:T(2026,11,11,8),body:"수~금 출장이라 택배 2개만 받아주시면 귤 한 봉지 드릴게요!",done:false},
+  {id:"s3",board:"share",cat:"공동구매",title:"제주 감귤 10kg 같이 사요 (4세대 모집)",author:"106동 301호",ts:T(2026,11,10),body:"10kg 한 박스를 4집이 나누면 한 집에 7천 원 정도예요. 2자리 남았어요.",done:false},
+  {id:"s4",board:"share",cat:"품앗이",title:"초등 수학 숙제 봐드려요 (대학생)",author:"102동 1101호",ts:T(2026,11,10,9),body:"평일 저녁 7시 이후에 커뮤니티룸에서 1시간씩 가능해요. 사례는 안 받아요.",done:false},
+  {id:"s5",board:"share",cat:"나눔",title:"김장하고 남은 무 5개 가져가세요",author:"203동 102호",ts:T(2026,11,9),body:"현관 앞에 두었어요. 필요한 만큼만 가져가 주세요.",done:true},
+  {id:"s6",board:"share",cat:"품앗이",title:"전동드릴 빌려드립니다",author:"105동 703호",ts:T(2026,11,7),body:"선반 다실 분들 편하게 연락 주세요. 주말에는 집에 있어요.",done:false},
+  {id:"g1",board:"suggest",cat:"시설",title:"102동 앞 놀이터 가로등이 너무 어두워요",author:"102동 주민",ts:T(2026,11,10,21),body:"저녁에 아이들과 지나가기 무서울 정도예요. 행사 때도 어두워서 조명이 더 있으면 좋겠습니다.",status:"답변완료"},
+  {id:"g2",board:"suggest",cat:"행사",title:"동 행사를 평일 저녁에도 한 번 열어 주세요",author:"105동 1203호",ts:T(2026,11,9,22),body:"주말 근무라 토요일 행사에 한 번도 못 갔어요. 금요일 저녁 행사도 있으면 좋겠습니다.",status:"검토중"},
+  {id:"g3",board:"suggest",cat:"커뮤니티",title:"1인 가구 이웃끼리 모이는 자리가 있으면 좋겠어요",author:"익명",ts:T(2026,11,8),body:"혼자 살다 보니 이웃을 알 기회가 거의 없어요. 처음 오는 사람도 부담 없는 자리가 있었으면 해요.",status:"답변완료"},
+  {id:"g4",board:"suggest",cat:"기타",title:"분리수거장 안내문을 큰 글씨로 바꿔 주세요",author:"201동 302호",ts:T(2026,11,6),body:"어르신들이 안내문을 잘 못 읽으셔서 자주 헷갈려 하세요.",status:"접수"},
+];
+const SEED_COMMENTS=[
+  {id:"sc1",postId:"s2",author:"102동 803호",ts:T(2026,11,11,10),body:"제가 재택이라 받아드릴게요! 쪽지 드렸어요."},
+  {id:"sc2",postId:"s3",author:"106동 1502호",ts:T(2026,11,10,15),body:"저도 참여할게요. 한 자리 남았네요!"},
+  {id:"gc1",postId:"g1",author:"관리사무소",staff:true,ts:T(2026,11,11,10),body:"확인 후 11월 13일에 LED 가로등 2개를 추가 설치했습니다. 불편을 드려 죄송합니다."},
+  {id:"gc2",postId:"g2",author:"이웃정 운영위",staff:true,ts:T(2026,11,10,11),body:"좋은 의견 감사합니다. 12월 운영위 회의에서 금요일 저녁 행사를 안건으로 다루겠습니다."},
+  {id:"gc3",postId:"g2",author:"201동 1104호",ts:T(2026,11,10,13),body:"저도 찬성이에요. 평일 저녁이면 퇴근하고 갈 수 있어요."},
+  {id:"gc4",postId:"g3",author:"이웃정 운영위",staff:true,ts:T(2026,11,9,10),body:"'1인 가구 반찬 나눔' 소모임이 새로 생겼어요. 소모임 메뉴에서 가입하실 수 있습니다."},
+];
+const LIVE={mode:"local",posts:[],comments:[]};
+const myKey=()=>S.user?`${S.user.dong}-${S.user.ho}`:"";
+function allPosts(board){return [...LIVE.posts,...SEED_POSTS].filter(p=>p.board===board).sort((a,b)=>b.ts-a.ts)}
+function findPost(id){return LIVE.posts.find(p=>p.id===id)||SEED_POSTS.find(p=>p.id===id)}
+function commentsOf(id){return [...SEED_COMMENTS,...LIVE.comments].filter(c=>c.postId===id).sort((a,b)=>a.ts-b.ts)}
+function fmt(ts){const d=new Date(ts),now=Date.now(),diff=(now-ts)/60000;
+  if(diff>=0&&diff<1)return "방금";if(diff>=0&&diff<60)return Math.floor(diff)+"분 전";
+  const p=n=>String(n).padStart(2,"0");return `${d.getFullYear()}.${p(d.getMonth()+1)}.${p(d.getDate())}`}
+function fmtFull(ts){const d=new Date(ts),p=n=>String(n).padStart(2,"0");return `${d.getFullYear()}.${p(d.getMonth()+1)}.${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`}
+function isNew(ts){return Date.now()-ts<24*3600*1000}
+
+const DB={
+  async init(){
+    const cfg=window.SUPABASE_CONFIG;
+    if(cfg&&cfg.url&&cfg.anonKey&&!/^여기/.test(cfg.url)){
+      try{
+        await new Promise((ok,no)=>{const sc=document.createElement("script");
+          sc.src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js";sc.onload=ok;sc.onerror=no;document.head.appendChild(sc)});
+        this.sb=window.supabase.createClient(cfg.url,cfg.anonKey);
+        await this.loadAll();LIVE.mode="live";
+        this.sb.channel("cth-board")
+          .on("postgres_changes",{event:"INSERT",schema:"public",table:"posts"},pl=>this.incoming("posts",this.mapPost(pl.new)))
+          .on("postgres_changes",{event:"INSERT",schema:"public",table:"comments"},pl=>this.incoming("comments",this.mapComment(pl.new)))
+          .subscribe(st=>{
+            if(st==="SUBSCRIBED"){if(LIVE.mode!=="live"){LIVE.mode="live";this.loadAll().then(refreshLive)}}
+            else if(st==="CHANNEL_ERROR"||st==="TIMED_OUT"){LIVE.mode="error";refreshLive()}
+          });
+        return;
+      }catch(e){console.error("Supabase 연결 실패, 체험 모드로 전환",e);LIVE.mode="error"}
+    }
+    if(LIVE.mode!=="error")LIVE.mode="local";
+    try{const s=JSON.parse(localStorage.getItem("cth-live")||"null");if(s){LIVE.posts=s.posts||[];LIVE.comments=s.comments||[]}}catch(e){}
+    try{this.bc=new BroadcastChannel("cth-live");this.bc.onmessage=e=>{
+      const before=LIVE.posts.length+LIVE.comments.length;LIVE.posts=e.data.posts;LIVE.comments=e.data.comments;
+      if(LIVE.posts.length+LIVE.comments.length>before)toast("새 글이나 댓글이 올라왔어요.");refreshLive()}}catch(e){}
+  },
+  mapPost(r){return {id:r.id,board:r.board,cat:r.cat,title:r.title,body:r.body,author:r.author,authorKey:r.author_key,status:r.status,done:r.done,ts:new Date(r.created_at).getTime()}},
+  mapComment(r){return {id:r.id,postId:r.post_id,body:r.body,author:r.author,authorKey:r.author_key,ts:new Date(r.created_at).getTime()}},
+  async loadAll(){
+    const [p,c]=await Promise.all([
+      this.sb.from("posts").select("*").order("created_at",{ascending:false}).limit(300),
+      this.sb.from("comments").select("*").order("created_at",{ascending:true}).limit(2000)]);
+    if(p.error)throw p.error;if(c.error)throw c.error;
+    LIVE.posts=p.data.map(r=>this.mapPost(r));LIVE.comments=c.data.map(r=>this.mapComment(r));
+  },
+  incoming(kind,item){
+    const arr=kind==="posts"?LIVE.posts:LIVE.comments;
+    if(arr.some(x=>x.id===item.id))return; // 내가 방금 쓴 글은 이미 들어가 있음
+    kind==="posts"?arr.unshift(item):arr.push(item);
+    if(S.user&&item.authorKey!==myKey())toast(kind==="posts"?`새 글이 올라왔어요: ${item.title}`:`새 댓글: ${String(item.body).slice(0,20)}`);
+    refreshLive();
+  },
+  saveLocal(){const d={posts:LIVE.posts,comments:LIVE.comments};try{localStorage.setItem("cth-live",JSON.stringify(d))}catch(e){}try{this.bc&&this.bc.postMessage(d)}catch(e){}},
+  async addPost(p){
+    p={...p,authorKey:myKey()};
+    if(LIVE.mode==="live"){
+      const {data,error}=await this.sb.from("posts").insert({board:p.board,cat:p.cat,title:p.title,body:p.body,author:p.author,author_key:p.authorKey,status:p.status??null,done:p.done??false}).select().single();
+      if(error)throw error;this.incoming("posts",this.mapPost(data));
+    }else{LIVE.posts.unshift({...p,id:"l"+Date.now(),ts:Date.now()});this.saveLocal();refreshLive()}
+  },
+  async addComment(c){
+    c={...c,authorKey:myKey()};
+    if(LIVE.mode==="live"){
+      const {data,error}=await this.sb.from("comments").insert({post_id:c.postId,body:c.body,author:c.author,author_key:c.authorKey}).select().single();
+      if(error)throw error;this.incoming("comments",this.mapComment(data));
+    }else{LIVE.comments.push({...c,id:"c"+Date.now(),ts:Date.now()});this.saveLocal();refreshLive()}
+  },
+};
+function liveBadge(){
+  return LIVE.mode==="live"?'<span class="live on">● 실시간 연결됨</span>'
+    :LIVE.mode==="error"?'<span class="live err">● 서버 연결 실패: 체험 모드로 동작 중</span>'
+    :'<span class="live">● 체험 모드: 이 브라우저에만 저장돼요</span>';
+}
+/* 실시간 갱신: 쓰던 글은 지우지 않고 화면만 새로 그림 */
+function refreshLive(){
+  if(!S.user||!["home","share","suggest"].includes(S.view))return;
+  if($("#modal").classList.contains("on"))return;
+  const keep={};document.querySelectorAll("#view textarea[id],#view input[id]").forEach(el=>keep[el.id]=el.value);
+  const fid=document.activeElement&&document.activeElement.id,y=window.scrollY;
+  render();
+  Object.entries(keep).forEach(([k,v])=>{const el=document.getElementById(k);if(el)el.value=v});
+  if(fid&&document.getElementById(fid))document.getElementById(fid).focus();
+  window.scrollTo(0,y);
+}
+DB.init().then(refreshLive);
+
+/* ---------- 로그인 ---------- */
+$("#loginForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const d=$("#inDong").value.replace(/\D/g,""),h=$("#inHo").value.replace(/\D/g,""),p=$("#inPw").value,err=$("#loginErr");
+  if(!d||!h||!p){err.textContent="동, 호수, 비밀번호를 모두 입력해 주세요.";return}
+  if(d!==ACCOUNT.dong||h!==ACCOUNT.ho||p!==ACCOUNT.pw){err.textContent="동·호수 또는 비밀번호가 일치하지 않습니다.";$("#inPw").value="";return}
+  err.textContent="";S.user={dong:d+"동",ho:h+"호"};
+  $("#login").style.display="none";$("#app").style.display="block";
+  $("#whoName").textContent=`${S.user.dong} ${S.user.ho}`;updateTop();go("home");
+});
+$("#logout").onclick=()=>{S.user=null;$("#app").style.display="none";$("#login").style.display="grid";$("#inPw").value="";window.scrollTo(0,0)};
+
+/* ---------- GNB ---------- */
+$("#gnb").innerHTML=MENU.map(m=>`<li><button data-nav="${m.id}">${m.t}</button><div class="dep2">${m.subs.map(s=>`<button data-nav="${m.id}" data-sub="${s[0]}">${s[1]}</button>`).join("")}</div></li>`).join("");
+document.addEventListener("click",e=>{
+  const b=e.target.closest("[data-nav]");if(!b)return;
+  go(b.dataset.nav,b.dataset.sub||null);
+});
+function go(v,sub){
+  S.view=v;S.postView=null;S.noticeView=null;
+  if(v!=="home"){const m=MENU.find(x=>x.id===v);S.sub=sub||m.subs[0][0]}
+  document.querySelectorAll(".gnb>li>button").forEach(b=>b.classList.toggle("on",b.dataset.nav===v));
+  render();window.scrollTo(0,0);
+}
+function render(){
+  $("#view").innerHTML=S.view==="home"?HOME():SUBPAGE();
+  BIND[S.view]&&BIND[S.view]();
+}
+
+/* ---------- 아이콘 ---------- */
+const IC={
+  cal:'<svg viewBox="0 0 40 40"><rect x="6" y="9" width="28" height="25"/><path d="M6 16h28M13 5v7M27 5v7"/><circle cx="20" cy="25" r="3"/></svg>',
+  hand:'<svg viewBox="0 0 40 40"><path d="M8 22c4-2 7-1 10 1l6 3c2 1 1 4-2 3l-5-1"/><path d="M8 30l6 2c3 1 6 0 9-1l9-5c2-1 1-4-2-3l-7 3"/><path d="M20 7c-3-3-8 1-4 5l4 4 4-4c4-4-1-8-4-5z"/></svg>',
+  people:'<svg viewBox="0 0 40 40"><circle cx="14" cy="13" r="5"/><circle cx="27" cy="15" r="4"/><path d="M4 33c0-6 4-10 10-10s10 4 10 10M24 24c5 0 11 3 11 9"/></svg>',
+  star:'<svg viewBox="0 0 40 40"><path d="M20 5l4.5 9.5 10.5 1.3-7.7 7.2 2 10.4L20 28.3l-9.3 5.1 2-10.4L5 15.8l10.5-1.3z"/></svg>',
+  vote:'<svg viewBox="0 0 40 40"><rect x="7" y="18" width="26" height="16"/><path d="M13 18V8h14v10M16 13l3 3 6-6"/></svg>',
+  box:'<svg viewBox="0 0 40 40"><rect x="6" y="14" width="28" height="20"/><path d="M6 14l6-8h16l6 8M15 24h10M20 4v12"/></svg>',
+  phone:'<svg viewBox="0 0 40 40"><path d="M10 6h6l3 8-4 3c2 4 5 7 9 9l3-4 8 3v6c0 2-2 4-4 4C18 35 5 22 6 10c0-2 2-4 4-4z"/></svg>',
+};
+
+/* ---------- 메인 ---------- */
+function HOME(){
+  const asRow=b=>allPosts(b).map(p=>({c:p.cat,t:p.title,d:fmt(p.ts),fresh:isNew(p.ts),open:`${b}:${p.id}`}));
+  const tabs=[["공지사항",S.notices.filter(n=>n.c==="공지").map(n=>({...n,open:"n:"+S.notices.indexOf(n)}))],["단지소식",S.notices.filter(n=>n.c!=="공지").map(n=>({...n,open:"n:"+S.notices.indexOf(n)}))],["나눔·품앗이",asRow("share")],["건의함",asRow("suggest")]];
+  const [,items]=tabs[S.homeTab];
+  const evs=Object.values(S.events).sort((a,b)=>a.date-b.date);
+  const ev=S.events.e2,open=ev.roles.filter(r=>!r[0]).length;
+  let cal="";const evd={};evs.forEach(e=>evd[e.date]=e);
+  for(let w=0;w<5;w++){cal+="<tr>";for(let i=0;i<7;i++){const d=w*7+i+1;if(d>30){cal+="<td></td>";continue}
+    cal+=`<td class="${evd[d]?"ev":d===11?"today":""} ${i===0?"sun":i===6?"sat":""}">${evd[d]?`<b title="${evd[d].title}">${d}</b>`:d===11?`<b>${d}</b>`:d}</td>`}cal+="</tr>"}
+  const gal=[["207동 푸드트럭 데이","2026.11.07","10% 70%"],["101동 가을 야시장","2026.10.24","60% 60%"],["203동 단지 텃밭 수확","2026.10.11","90% 80%"],["105동 여름밤 영화 상영","2026.08.22","35% 35%"]];
+  return `
+  <section class="mv"><div class="wrap">
+    <small>CHUNGNAM THE HILL · 정(情)의 재분배</small>
+    <h2>얼굴만 알던 이웃이<br>이름을 아는 이웃이 되는 곳</h2>
+    <p>매주 토요일, 한 동씩 돌아가며 이웃이 함께 준비하는 행사로 충남더힐을 채워 갑니다.</p>
+    <div class="dots"><i></i><i></i><i></i></div>
+  </div></section>
+  <div class="wrap quick"><ul>
+    <li><button data-nav="events" data-sub="month">${IC.cal}이달의 행사</button></li>
+    <li><button data-nav="events" data-sub="month">${IC.people}행사 역할 신청</button></li>
+    <li><button data-nav="share">${IC.hand}나눔·품앗이</button></li>
+    <li><button data-nav="suggest">${IC.box}건의함</button></li>
+    <li><button data-nav="events" data-sub="vote">${IC.vote}행사 투표</button></li>
+    <li><button data-nav="points">${IC.star}정 포인트</button></li>
+  </ul></div>
+  <section class="wrap main-sec"><div class="cols">
+    <div>
+      <div class="box-h"><div class="btabs">${tabs.map((t,i)=>`<button data-htab="${i}" class="${S.homeTab===i?"on":""}">${t[0]}</button>`).join("")}</div><button class="more" aria-label="더보기" data-nav="${["news","news","share","suggest"][S.homeTab]}">+</button></div>
+      <ul class="nlist">${items.slice(0,6).map(n=>`<li><span><span class="cat ${catCls(n.c)}">${n.c}</span><button data-open="${n.open}">${esc(n.t)}</button>${n.fresh||n.d==="2026.11.11"?'<span class="new">N</span>':""}</span><span class="dt num">${n.d}</span></li>`).join("")}</ul>
+    </div>
+    <div>
+      <div class="box-h"><h3>이번 주 우리 동 행사</h3><button class="more" aria-label="더보기" data-nav="events">+</button></div>
+      <div class="evcard">
+        <div class="ph"><span>역할 ${open}개 모집 중</span></div>
+        <div class="bd">
+          <h4>${ev.title}</h4>
+          <dl><dt>일시</dt><dd>${ev.time}</dd><dt>장소</dt><dd>${ev.place}</dd><dt>내용</dt><dd>장터 · 층별 대항전 · 다 함께 식사</dd></dl>
+          <button class="btn sm" data-nav="events" data-sub="month" style="justify-self:start;margin-top:4px">역할 신청하기</button>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="box-h"><h3>11월 행사 일정</h3><button class="more" aria-label="더보기" data-nav="events" data-sub="month">+</button></div>
+      <table class="mcal"><thead><tr><th class="sun">일</th><th>월</th><th>화</th><th>수</th><th>목</th><th>금</th><th class="sat">토</th></tr></thead><tbody>${cal}</tbody></table>
+      <ul class="mcal-list">${evs.map(e=>`<li><b class="num">11.${String(e.date).padStart(2,"0")}</b><span>${e.title}</span></li>`).join("")}</ul>
+    </div>
+  </div></section>
+  <section class="gal-sec"><div class="wrap">
+    <div class="box-h" style="border-color:var(--ink)"><h3>행사 포토갤러리</h3><button class="more" aria-label="더보기" data-nav="events" data-sub="review">+</button></div>
+    <ul class="gal" style="margin-top:14px">${gal.map(g=>`<li><div class="th" style="background-position:${g[2]}"></div><div class="cp"><b style="font-weight:500">${g[0]}</b><span class="num">${g[1]}</span></div></li>`).join("")}</ul>
+  </div></section>
+  <section class="wrap banners">
+    <button data-nav="news" data-sub="newcomer"><b>새 이웃 소개</b><span>102동 903호에 새 가족이 왔어요</span></button>
+    <button data-nav="points" data-sub="rank"><b>이달의 1위 동 상금 50만 원</b><span>102동 현재 ${rankOf("102동")}위</span></button>
+    <button data-nav="clubs"><b>소모임 가입</b><span>러닝 · 독서 · 육아 · 반찬 나눔</span></button>
+    <button data-nav="news" data-sub="notice"><b>관리사무소</b><span>TEL 031-000-1234 (평일 09~18시)</span></button>
+  </section>`;
+}
+
+/* ---------- 서브페이지 공통 ---------- */
+function SUBPAGE(){
+  const m=MENU.find(x=>x.id===S.view),sub=m.subs.find(s=>s[0]===S.sub);
+  return `
+  <section class="sv"><div class="wrap"><h2>${m.t}</h2><p>${m.d}</p></div></section>
+  <div class="wrap sub">
+    <aside class="lnb"><h3>${m.t}</h3>
+      <ul>${m.subs.map(s=>`<li><button data-nav="${m.id}" data-sub="${s[0]}" class="${s[0]===S.sub?"on":""}">${s[1]}</button></li>`).join("")}</ul>
+      <div class="call"><span>관리사무소</span><b class="num">031-000-1234</b><span>평일 09:00~18:00</span></div>
+    </aside>
+    <div style="min-width:0">
+      <div class="cont-h"><h3>${sub[1]}</h3><p class="loc">HOME › ${m.t} › <b>${sub[1]}</b></p></div>
+      <div class="cont">${(PAGES[m.id][S.sub]||PAGES[m.id]._)()}</div>
+    </div>
+  </div>`;
+}
+
+function boardList(rows,head,cols){
+  return `<div class="tbl-wrap"><table class="tbl"><thead><tr>${head.map(h=>`<th scope="col" style="${h[1]?`width:${h[1]}`:""}">${h[0]}</th>`).join("")}</tr></thead><tbody>${rows.map(cols).join("")||`<tr><td colspan="${head.length}">등록된 글이 없습니다.</td></tr>`}</tbody></table></div>`;
+}
+
+const PAGES={
+news:{
+  notice(){
+    if(S.noticeView!==null){const n=S.notices[S.noticeView];return `<div class="view"><div class="vh"><h5>[${n.c}] ${esc(n.t)}</h5><p>작성자 ${n.w} · 등록일 ${n.d} · 조회 ${n.v}</p></div><div class="vb">${esc(n.b)}</div></div><div class="btns"><button class="btn line" id="backN">목록</button></div>`}
+    return `<div class="bbar"><p class="tot">전체 <b>${S.notices.length}</b>건</p><div class="srch"><select aria-label="검색 조건"><option>제목</option><option>내용</option></select><input aria-label="검색어" placeholder="검색어 입력"><button class="btn sm">검색</button></div></div>
+    ${boardList(S.notices,[["번호","70px"],["분류","80px"],["제목"],["작성자","120px"],["등록일","110px"],["조회","70px"]],(n,i)=>`<tr><td class="num">${S.notices.length-i}</td><td><span class="cat ${n.c==="행사"?"o":n.c==="투표"?"g":""}" style="margin:0">${n.c}</span></td><td class="l"><button class="tt" data-nv="${i}">${esc(n.t)}</button></td><td>${n.w}</td><td class="num">${n.d}</td><td class="num">${n.v}</td></tr>`)}
+    <div class="paging"><span class="on">1</span><span>2</span><span>3</span></div>`;
+  },
+  newcomer(){
+    return `<div class="intro"><b>새로 이사 온 이웃을 소개합니다</b><p class="desc">새 이웃은 다음 동 행사에 초대받아요. 행사에서 반갑게 인사해 주세요.</p></div>
+    ${boardList([["102동 903호","2026.11.08","네 식구예요. 첫째가 초등학교 2학년입니다. 잘 부탁드려요!"],["105동 1104호","2026.11.01","혼자 사는 직장인이에요. 러닝 모임에 들어가고 싶어요."],["201동 302호","2026.10.25","강아지 두 마리와 함께 이사 왔어요."]],[["세대","130px"],["입주일","120px"],["인사말"]],r=>`<tr><td>${r[0]}</td><td class="num">${r[1]}</td><td class="l">${r[2]}</td></tr>`)}
+    <div class="btns"><button class="btn" id="welcome">환영 인사 남기기 (+5정)</button></div>`;
+  },
+},
+events:{
+  month(){
+    const ev=S.events[S.selEvent],filled=ev.roles.filter(r=>r[0]).length,mine=ev.dong===S.user.dong;
+    const evd={};Object.values(S.events).forEach(e=>evd[e.date]=e);
+    let rows="";for(let w=0;w<5;w++){rows+="<tr>";for(let i=0;i<7;i++){const d=w*7+i+1;if(d>30){rows+="<td></td>";continue}const e=evd[d];
+      rows+=`<td class="${d===11?"today":""}"><span class="n ${i===0?"sun":i===6?"sat":""}">${d}</span>${e?`<button class="evb ${d<11?"past":""} ${e.id===S.selEvent?"sel":""}" data-ev="${e.id}">${e.title}</button>`:""}</td>`}rows+="</tr>"}
+    const st=ev.status==="done"?'<span class="st end">행사 종료</span>':ev.status==="open"?'<span class="st wait">역할 모집 중</span>':'<span class="st ok">준비 중</span>';
+    return `
+    <div class="sect"><h4>2026년 11월 행사 달력</h4><p class="desc">행사명을 누르면 아래에서 상세 내용과 역할 분담 현황을 볼 수 있습니다.</p>
+      <div class="tbl-wrap"><table class="cal"><thead><tr><th class="sun">일</th><th>월</th><th>화</th><th>수</th><th>목</th><th>금</th><th class="sat">토</th></tr></thead><tbody>${rows}</tbody></table></div></div>
+    <div class="sect"><h4>행사 상세</h4>
+      <div class="evinfo"><div class="ph"></div><div class="bd">
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><h5>${ev.title}</h5>${st}</div>
+        <dl><dt>일시</dt><dd>${ev.time}</dd><dt>장소</dt><dd>${ev.place}</dd><dt>주관</dt><dd>${ev.dong} 주민</dd><dt>준비 현황</dt><dd><span class="num">${filled} / ${ev.roles.length}</span> 역할 확정<div class="prog" style="margin-top:4px;max-width:240px"><i style="width:${filled/ev.roles.length*100}%"></i></div></dd></dl>
+        ${ev.status!=="done"?`<div style="display:flex;gap:6px;flex-wrap:wrap">${!mine?`<button class="btn sm ${S.going[ev.id]?"line":""}" data-going="${ev.id}">${S.going[ev.id]?"참여 신청 취소":"손님으로 참여 신청"}</button>`:""}${ev.id==="e2"?`<button class="btn line sm" data-nav="events" data-sub="program">진행 순서 보기</button>`:""}</div>`:""}
+      </div></div></div>
+    <div class="sect"><h4>역할 분담 현황</h4><p class="desc">${mine?"우리 동 행사입니다. 비어 있는 역할을 신청하거나 새 부스를 제안해 주세요.":`역할은 ${ev.dong} 주민이 맡고, 다른 동 이웃은 손님으로 참여합니다.`}</p>
+      ${boardList(ev.roles,[["번호","70px"],["담당 세대","120px"],["역할"],["상태","110px"],["신청","110px"]],(r,i)=>{const isMe=r[0]===me();
+        return `<tr class="${isMe?"mine":!r[0]?"open":""}"><td class="num">${i+1}</td><td>${r[0]?r[0]:"-"}</td><td class="l">${esc(r[1])}</td><td>${r[0]?'<span class="st ok">확정</span>':'<span class="st wait">모집 중</span>'}</td><td>${isMe&&ev.status!=="done"?`<button class="btn line sm" data-cancel="${i}">취소</button>`:!r[0]&&mine?`<button class="btn sm" data-take="${i}">신청</button>`:"-"}</td></tr>`})}
+      ${mine&&ev.status!=="done"?'<div class="btns"><button class="btn line" id="propose">새 부스·역할 제안</button></div>':""}
+    </div>`;
+  },
+  program(){
+    const tl=[["16:00","오프닝 · 우리 동 소개","주관 동 세대가 한 줄씩 자기소개","관심사 소개"],["16:15","이웃 장터","음식·나눔 부스 운영, 관심사 명찰과 이웃 빙고판 배부","관심사 명찰, 이웃 빙고"],["17:00","층별 대항 미니게임","같은 층이 한 팀이 되어 이웃 퀴즈·제기차기·몸으로 말해요","층별 팀 구성"],["17:40","이웃 한 상","부스 음식을 긴 공용 테이블에 모아 함께 식사","번호표 랜덤 좌석"],["18:20","해줄게요 / 필요해요 벽","포스트잇으로 도움을 주고받을 이웃 연결","현장 매칭"],["18:40","시상 · 바통 전달식","빙고 완성자·인사왕 시상, 다음 주관 동에 바통 전달, 단체사진","동 릴레이"]];
+    return `<div class="intro"><b>${S.events.e2.title} · ${S.events.e2.time}</b><p class="desc">파는 시간보다 함께하는 시간이 긴 행사입니다. 행사가 끝날 때 이름을 아는 이웃이 3명 이상 생기는 것이 목표예요.</p></div>
+    <div class="sect"><h4>진행 순서</h4>${boardList(tl,[["시간","90px"],["프로그램","190px"],["내용"],["교류 장치","150px"]],r=>`<tr><td class="num"><b style="color:var(--blue)">${r[0]}</b></td><td class="l"><b style="font-weight:500">${r[1]}</b></td><td class="l">${r[2]}</td><td>${r[3]}</td></tr>`)}</div>
+    <div class="sect"><h4>이웃 빙고판</h4><p class="desc">칸을 모두 채우면 정 포인트 50점! 아래 칸을 눌러 미리 체험해 보세요.</p>
+      <div class="tbl-wrap"><table class="tbl" style="table-layout:fixed;min-width:420px"><tbody>${[["같은 층 이웃과 인사하기","반려동물 키우는 이웃 찾기","10년 넘게 산 이웃 찾기"],["다른 동 이웃과 음식 나눠 먹기","나와 취미가 같은 이웃 찾기","어린이 판매자에게 물건 사기"],["처음 본 이웃 이름 3명 외우기","다음 행사 투표하기","단체사진 함께 찍기"]].map((r,ri)=>`<tr>${r.map((c,ci)=>`<td style="height:76px;padding:6px"><button data-bingo="${ri*3+ci}" class="tt" style="width:100%;height:100%;text-align:center;${S.bingo&&S.bingo[ri*3+ci]?"background:#eef4ff;color:var(--blue);font-weight:700":""}">${S.bingo&&S.bingo[ri*3+ci]?"✓ ":""}${c}</button></td>`).join("")}</tr>`).join("")}</tbody></table></div></div>`;
+  },
+  review(){
+    const g=[["207동 푸드트럭 데이","떡볶이 부스가 1시간 만에 완판됐어요","102동 102호","10% 70%"],["207동 푸드트럭 데이","회오리감자 줄이 제일 길었어요","207동 404호","45% 65%"],["207동 푸드트럭 데이","처음 인사한 이웃이 여섯 명이나 생겼어요","105동 1203호","80% 75%"],["101동 가을 야시장","층별 퀴즈에서 우리 층이 1등!","101동 702호","60% 30%"],["203동 단지 텃밭 수확","아이들과 고구마를 같이 캤어요","203동 502호","95% 85%"],["105동 여름밤 영화 상영","돗자리 옆자리 이웃과 친해졌어요","105동 301호","25% 40%"]];
+    return `<div class="bbar"><p class="tot">전체 <b>${g.length}</b>건</p><button class="btn" id="writeReview">후기 쓰기 (+10정)</button></div>
+    <ul class="pgal">${g.map(x=>`<li><div class="th" style="background-position:${x[3]}"></div><div class="cp"><b style="font-weight:500">${x[1]}</b><span>${x[0]} · ${x[2]}</span></div></li>`).join("")}</ul>`;
+  },
+  vote(){
+    const tot=S.votes.reduce((a,v)=>a+v.n,0);
+    return `<div class="intro"><b>12월 첫째 주 201동 행사 주제 투표</b><p class="desc">투표 기간 2026.11.05 ~ 11.20 · 모든 동 주민이 참여할 수 있습니다.</p></div>
+    <ul class="vote">${S.votes.map((v,i)=>`<li><button data-vote="${i}" class="${S.myVote===i?"on":""}"><span class="rd"></span><span>${v.t}</span><span class="num" style="color:var(--muted);font-size:.85rem">${v.n}표 (${Math.round(v.n/tot*100)}%)</span><span class="bar"><i style="width:${v.n/tot*100}%"></i></span></button></li>`).join("")}</ul>
+    <p class="desc">${S.myVote===null?"항목을 선택하면 바로 투표됩니다.":"투표가 완료되었습니다. 다른 항목을 누르면 변경됩니다."}</p>`;
+  },
+},
+share:{_(){return boardPage("share")}},
+suggest:{_(){return boardPage("suggest")}},
+clubs:{list(){
+  return `<div class="intro"><b>같은 단지 이웃과 가볍게 만나요</b><p class="desc">3명 이상 모이면 새 소모임을 만들 수 있고, 커뮤니티룸 예약도 함께 신청됩니다.</p></div>
+  ${boardList(S.clubs,[["분야","90px"],["모임명"],["일시","150px"],["장소","150px"],["인원","90px"],["가입","110px"]],(c,i)=>`<tr class="${c.joined?"mine":""}"><td><span class="cat ${c.tag==="청년"?"o":""}" style="margin:0">${c.tag}</span></td><td class="l">${c.n}</td><td>${c.w}</td><td>${c.p}</td><td class="num">${c.m}/${c.max}</td><td><button class="btn sm ${c.joined?"line":""}" data-club="${i}" ${!c.joined&&c.m>=c.max?"disabled":""}>${c.joined?"탈퇴":c.m>=c.max?"마감":"가입"}</button></td></tr>`)}
+  <div class="btns"><button class="btn line" id="newClub">새 소모임 제안</button></div>`;
+}},
+points:{
+  rank(){const arr=Object.entries(S.dongs).sort((a,b)=>b[1]-a[1]),max=arr[0][1];
+    return `<div class="intro"><b>11월 동별 정 순위</b><p class="desc">매달 1위 동에는 <b>상금 50만 원</b>을 드립니다. 다음 동 행사 재료비나 동 주민 회식 등 동 주민이 정한 곳에 쓸 수 있어요.</p></div>
+    ${boardList(arr,[["순위","80px"],["동","100px"],["누적 포인트"],["점수","110px"]],([d,p],i)=>`<tr class="${d===S.user.dong?"mine":""}"><td class="num"><b>${i+1}</b></td><td>${d}${d===S.user.dong?" (우리 동)":""}</td><td><div class="rankbar"><i style="width:${p/max*100}%"></i></div></td><td class="num">${p}정</td></tr>`)}`},
+  mine(){const roles=Object.values(S.events).some(e=>e.roles.some(r=>r[0]===me()));
+    return `<div class="ptbox"><div><span>보유 포인트</span><b class="num">${S.points}</b></div><div><span>우리 동 순위</span><b class="num">${rankOf(S.user.dong)}위</b></div><div><span>이번 달 활동</span><b class="num">${S.history.length}회</b></div></div>
+    <div class="sect"><h4>적립 내역</h4>${boardList(S.history,[["일자","120px"],["내용"],["포인트","100px"]],h=>`<tr><td class="num">${h.d}</td><td class="l">${esc(h.t)}</td><td class="num" style="color:var(--blue)">+${h.p}</td></tr>`)}</div>
+    <div class="sect"><h4>획득 배지</h4><p class="desc">첫 인사 · ${roles?"장터 일꾼 · ":""}${S.clubs.some(c=>c.joined)?"모임 멤버 · ":""}${S.points>=300?"정 부자":""}</p></div>`},
+  guide(){return boardList([["동 행사 역할 맡기","30정","행사 종료 후 지급"],["다른 동 행사 손님 참여","10정","참여 신청 기준"],["이웃 빙고 완성","50정","행사 당일 확인"],["나눔·품앗이 완료","20정","작성자·참여자 모두"],["행사 후기 작성","10정","행사당 1회"],["소모임 가입·개설","15정","모임당 1회"],["새 이웃 환영 인사","5정","세대당 1회"]],[["활동"],["포인트","100px"],["비고","180px"]],r=>`<tr><td class="l">${r[0]}</td><td class="num" style="color:var(--blue);font-weight:500">${r[1]}</td><td>${r[2]}</td></tr>`)+`<p class="desc">매달 동별 순위 1위 동에는 상금 50만 원을 드립니다.</p>`},
+},
+my:{
+  act(){const roles=Object.values(S.events).flatMap(e=>e.roles.filter(r=>r[0]===me()).map(r=>[e.title,r[1]]));
+    return `<div class="sect"><h4>세대 정보</h4>${boardList([[S.user.dong,S.user.ho,"관리사무소 인증 완료",S.points+"정"]],[["동"],["호수"],["인증"],["정 포인트"]],r=>`<tr>${r.map(x=>`<td>${x}</td>`).join("")}</tr>`)}</div>
+    <div class="sect"><h4>맡은 행사 역할</h4>${boardList(roles,[["행사","220px"],["역할"]],r=>`<tr><td>${r[0]}</td><td class="l">${esc(r[1])}</td></tr>`)}</div>
+    <div class="sect"><h4>참여 예정 행사 · 가입한 소모임</h4>${boardList([...Object.keys(S.going).filter(k=>S.going[k]).map(k=>["행사",S.events[k].title]),...S.clubs.filter(c=>c.joined).map(c=>["소모임",c.n])],[["구분","120px"],["이름"]],r=>`<tr><td>${r[0]}</td><td class="l">${r[1]}</td></tr>`)}</div>`},
+  set(){const row=(k,l,d)=>`<div class="setrow"><span>${l}<small>${d}</small></span><button class="sw" role="switch" aria-checked="${S.settings[k]}" aria-label="${l}" data-set="${k}"></button></div>`;
+    return `<div class="sect"><h4>공개 범위</h4><div>${row("showHo","호수 공개","끄면 게시글에 '102동 주민'으로만 표시됩니다")}${row("showClubs","가입한 소모임 공개","새 이웃 소개 화면에 함께 보여줍니다")}</div></div>
+    <div class="sect"><h4>알림 · 화면</h4><div>${row("alarm","행사 알림 받기","우리 동 행사 역할 모집이 열리면 알려드립니다")}${row("big","큰 글씨 모드","글자를 크게 키워 어르신도 편하게 보실 수 있습니다")}</div></div>
+    <div class="intro"><b>커뮤니티 운영규칙</b><p class="desc">실제 거주 세대만 가입할 수 있습니다. 욕설·광고·개인정보 노출 글은 신고 후 운영위원회가 확인해 가립니다. 층간소음 등 갈등은 관리사무소 상담 창구를 이용해 주세요.</p></div>`},
+},
+};
+
+/* ---------- 실시간 게시판 화면 (나눔·품앗이 / 건의함) ---------- */
+function catCls(c){return ({"품앗이":"o","행사":"o","공동구매":"g","투표":"g","기타":"g"})[c]||""}
+const BOARD={
+  share:{cats:["나눔","품앗이","공동구매"],intro:["행사가 없는 날에도 이웃과 주고받아요","나눔이나 품앗이가 완료되면 작성자와 참여자 모두 정 포인트 20점을 받습니다. 댓글로 바로 약속을 잡아 보세요."],points:20},
+  suggest:{cats:["시설","행사","커뮤니티","기타"],intro:["주민 건의함","단지 시설, 동 행사, 커뮤니티 운영에 대한 의견을 남겨 주세요. 관리사무소와 이웃정 운영위원회가 댓글로 답변드립니다. 익명으로도 쓸 수 있어요."],points:10},
+};
+function statusTag(p,board){
+  if(board==="suggest"){const st=p.status||"접수";return `<span class="st ${st==="답변완료"?"ok":st==="검토중"?"wait":"end"}">${st}</span>`}
+  return p.done?'<span class="st end">완료</span>':'<span class="st ok">진행</span>';
+}
+function boardPage(board){
+  const cfg=BOARD[board];
+  if(S.postView!==null){
+    const p=findPost(S.postView);if(!p){S.postView=null;return boardPage(board)}
+    const cm=commentsOf(p.id);
+    return `<div class="bbar"><span></span>${liveBadge()}</div>
+    <div class="view"><div class="vh"><h5>[${p.cat}] ${esc(p.title)}</h5><p>작성자 ${esc(p.author)} · 등록일 ${fmtFull(p.ts)} · 댓글 ${cm.length} · ${statusTag(p,board)}</p></div><div class="vb" style="white-space:pre-wrap">${esc(p.body)}</div></div>
+    <div class="cmts">
+      <h5>댓글 <b class="num">${cm.length}</b></h5>
+      <ul>${cm.map(c=>`<li class="${c.staff?"staff":""} ${c.authorKey&&c.authorKey===myKey()?"mine":""}"><div class="ch"><b>${esc(c.author)}</b>${c.staff?'<span class="cat" style="margin:0 0 0 6px">답변</span>':""}<span class="num">${fmtFull(c.ts)}</span></div><p>${esc(c.body)}</p></li>`).join("")||'<li class="empty">첫 댓글을 남겨 보세요.</li>'}</ul>
+      <form id="cmtForm" class="cform"><label for="cmt" class="sr">댓글 입력</label><textarea id="cmt" rows="3" maxlength="500" placeholder="${board==="suggest"?"이 건의에 대한 의견을 남겨 주세요":"댓글로 이웃과 약속을 잡아 보세요"}"></textarea><button class="btn">댓글 등록</button></form>
+    </div>
+    <div class="btns"><button class="btn line" id="backP">목록</button></div>`;
+  }
+  const list=allPosts(board).filter(p=>S.sub==="전체"||p.cat===S.sub);
+  return `<div class="intro"><b>${cfg.intro[0]}</b><p class="desc">${cfg.intro[1]}</p></div>
+  <div class="bbar"><p class="tot">전체 <b>${list.length}</b>건 ${liveBadge()}</p><button class="btn sm" id="newPost">${board==="suggest"?"건의하기":"글쓰기"}</button></div>
+  ${boardList(list,[["번호","64px"],["분류","90px"],["제목"],["작성자","120px"],["등록일","100px"],["댓글","60px"],["상태","90px"]],(p,i)=>`<tr><td class="num">${list.length-i}</td><td><span class="cat ${catCls(p.cat)}" style="margin:0">${p.cat}</span></td><td class="l"><button class="tt" data-pv="${p.id}">${esc(p.title)}</button>${isNew(p.ts)?'<span class="new">N</span>':""}</td><td>${esc(p.author)}</td><td class="num">${fmt(p.ts)}</td><td class="num">${commentsOf(p.id).length}</td><td>${statusTag(p,board)}</td></tr>`)}
+  <div class="paging"><span class="on">1</span></div>`;
+}
+function bindBoard(board){
+  const cfg=BOARD[board];
+  on("[data-pv]",b=>{S.postView=b.dataset.pv;render();window.scrollTo(0,0)});
+  $("#backP")&&($("#backP").onclick=()=>{S.postView=null;render()});
+  const cf=$("#cmtForm");
+  if(cf)cf.onsubmit=async e=>{e.preventDefault();const t=$("#cmt"),body=t.value.trim();if(!body)return;
+    const btn=cf.querySelector("button");btn.disabled=true;
+    try{await DB.addComment({postId:S.postView,body,author:S.settings.showHo?`${S.user.dong} ${S.user.ho}`:`${S.user.dong} 주민`});t.value="";toast("댓글이 등록되었습니다.");refreshLive()}
+    catch(err){console.error(err);toast("댓글 등록에 실패했어요. 잠시 후 다시 시도해 주세요.")}
+    btn.disabled=false};
+  $("#newPost")&&($("#newPost").onclick=()=>modal(board==="suggest"?"건의하기":"글쓰기",
+    `<div class="f"><label for="pc">분류</label><select id="pc" name="c">${cfg.cats.map(c=>`<option ${c===S.sub?"selected":""}>${c}</option>`).join("")}</select></div>
+     <div class="f"><label for="pt">제목</label><input id="pt" name="t" required maxlength="100"></div>
+     <div class="f"><label for="pb">내용</label><textarea id="pb" name="b" rows="6" maxlength="2000"></textarea></div>
+     ${board==="suggest"?'<label class="chk" for="anon"><input type="checkbox" id="anon" name="anon"> 익명으로 건의하기</label>':""}`,"등록",fd=>{
+    const t=(fd.get("t")||"").trim();if(!t)return false;
+    const author=fd.get("anon")?"익명":S.settings.showHo?`${S.user.dong} ${S.user.ho}`:`${S.user.dong} 주민`;
+    const post={board,cat:fd.get("c"),title:t,body:(fd.get("b")||"").trim()||(board==="suggest"?"(내용 없음)":"자세한 내용은 댓글로 문의해 주세요."),author};
+    if(board==="suggest")post.status="접수";else post.done=false;
+    DB.addPost(post).then(()=>{addPoints(cfg.points,board==="suggest"?"건의함 의견 등록":`${post.cat} 게시판 글 등록`);S.sub="전체";S.postView=null;refreshLive()})
+      .catch(err=>{console.error(err);toast("글 등록에 실패했어요. 잠시 후 다시 시도해 주세요.")});
+  }));
+}
+
+/* ---------- 모달 ---------- */
+function modal(title,fields,ok,onOk){
+  const m=$("#modal");m.innerHTML=`<form><h5>${title}</h5>${fields}<div class="btns"><button type="button" class="btn line sm" data-close>취소</button><button class="btn sm">${ok}</button></div></form>`;m.classList.add("on");
+  const f=m.querySelector("form");f.querySelector("input,textarea,select")?.focus();
+  f.onsubmit=e=>{e.preventDefault();if(onOk(new FormData(f))!==false)m.classList.remove("on")};
+  m.querySelector("[data-close]").onclick=()=>m.classList.remove("on");
+}
+$("#modal").addEventListener("click",e=>{if(e.target.id==="modal")e.target.classList.remove("on")});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")$("#modal").classList.remove("on")});
+
+/* ---------- 이벤트 바인딩 ---------- */
+const on=(sel,fn)=>document.querySelectorAll(sel).forEach(b=>b.onclick=()=>fn(b));
+const BIND={
+home(){
+  on("[data-htab]",b=>{S.homeTab=+b.dataset.htab;render()});
+  on("[data-open]",b=>{const [k,i]=b.dataset.open.split(":");if(k==="n"){go("news","notice");S.noticeView=+i}else{go(k);S.postView=i}render()});
+},
+news(){
+  on("[data-nv]",b=>{S.noticeView=+b.dataset.nv;S.notices[S.noticeView].v++;render()});
+  $("#backN")&&($("#backN").onclick=()=>{S.noticeView=null;render()});
+  $("#welcome")&&($("#welcome").onclick=()=>modal("새 이웃에게 환영 인사","<div class='f'><label for='wm'>인사말</label><textarea id='wm' name='m' rows='3' required></textarea></div>","남기기",fd=>{if(!(fd.get("m")||"").trim())return false;addPoints(5,"새 이웃 환영 인사")}));
+},
+events(){
+  const ev=S.events[S.selEvent];
+  on("[data-ev]",b=>{S.selEvent=b.dataset.ev;render()});
+  on("[data-take]",b=>{if(ev.roles.some(r=>r[0]===me())){toast("한 행사에서는 역할을 하나만 신청할 수 있습니다.");return}ev.roles[+b.dataset.take][0]=me();addPoints(30,`${ev.title} 역할 신청`);render()});
+  on("[data-cancel]",b=>{ev.roles[+b.dataset.cancel][0]=null;subPoints(30);toast("역할 신청을 취소했습니다.");render()});
+  on("[data-going]",b=>{const id=b.dataset.going;S.going[id]=!S.going[id];if(S.going[id])addPoints(10,`${S.events[id].title} 손님 참여`);else{subPoints(10);toast("참여 신청을 취소했습니다.")}render()});
+  on("[data-vote]",b=>{const i=+b.dataset.vote;if(S.myVote!==null)S.votes[S.myVote].n--;S.votes[i].n++;S.myVote=i;toast("투표가 완료되었습니다.");render()});
+  on("[data-bingo]",b=>{S.bingo=S.bingo||Array(9).fill(false);const i=+b.dataset.bingo;S.bingo[i]=!S.bingo[i];if(S.bingo.every(x=>x)&&!S.bingoDone){S.bingoDone=true;addPoints(50,"이웃 빙고 완성")}render()});
+  $("#propose")&&($("#propose").onclick=()=>modal("새 부스·역할 제안","<div class='f'><label for='pm'>맡고 싶은 부스나 역할</label><input id='pm' name='m' required placeholder='예: 군고구마 부스, 포토존 꾸미기'></div>","제안하기",fd=>{const m=(fd.get("m")||"").trim();if(!m)return false;ev.roles.push([me(),m,1]);addPoints(30,`${ev.title} 새 역할 제안`);render()}));
+  $("#writeReview")&&($("#writeReview").onclick=()=>modal("행사 후기 쓰기","<div class='f'><label for='rv'>행사</label><select id='rv'><option>207동 푸드트럭 데이</option></select></div><div class='f'><label for='rt'>후기</label><textarea id='rt' name='r' rows='3' required placeholder='어떤 이웃을 만났나요?'></textarea></div><div class='f'><label for='rf'>사진 첨부</label><input id='rf' type='file' accept='image/*'></div>","등록",fd=>{if(!(fd.get("r")||"").trim())return false;addPoints(10,"207동 푸드트럭 데이 후기 작성")}));
+},
+share(){bindBoard("share")},
+suggest(){bindBoard("suggest")},
+clubs(){
+  on("[data-club]",b=>{const c=S.clubs[+b.dataset.club];c.joined=!c.joined;if(c.joined){c.m++;addPoints(15,`${c.n} 가입`)}else{c.m--;subPoints(15);toast("모임에서 탈퇴했습니다.")}render()});
+  $("#newClub").onclick=()=>modal("새 소모임 제안",`<div class="f"><label for="cn">모임명</label><input id="cn" name="n" required placeholder="예: 주말 베이킹 모임"></div><div class="r2"><div class="f"><label for="cw">일시</label><input id="cw" name="w" placeholder="격주 일 14:00"></div><div class="f"><label for="cp">장소</label><input id="cp" name="p" placeholder="커뮤니티룸"></div></div>`,"제안하기",fd=>{
+    const n=(fd.get("n")||"").trim();if(!n)return false;S.clubs.push({n,w:(fd.get("w")||"").trim()||"조율 중",p:(fd.get("p")||"").trim()||"조율 중",m:1,max:10,joined:true,tag:"신규"});addPoints(15,`${n} 소모임 개설`);render()});
+},
+my(){on("[data-set]",b=>{const k=b.dataset.set;S.settings[k]=!S.settings[k];if(k==="big")document.documentElement.classList.toggle("big",S.settings.big);render()})},
+};
+</script>
+</body>
+</html>
