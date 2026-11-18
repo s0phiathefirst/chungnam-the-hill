@@ -464,7 +464,7 @@ const DB={
     if(cfg&&cfg.url&&cfg.anonKey&&!/^여기/.test(cfg.url)){
       try{
         await new Promise((ok,no)=>{const sc=document.createElement("script");
-          sc.src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js";sc.onload=ok;sc.onerror=no;document.head.appendChild(sc)});
+          sc.src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.js";sc.onload=ok;sc.onerror=no;document.head.appendChild(sc)});
         this.sb=window.supabase.createClient(cfg.url,cfg.anonKey);
         await this.loadAll();LIVE.mode="live";
         this.sb.channel("cth-board")
