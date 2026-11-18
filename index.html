@@ -464,25 +464,53 @@ const DB={
     if(cfg&&cfg.url&&cfg.anonKey&&!/^여기/.test(cfg.url)){
       try{
         await new Promise((ok,no)=>{const sc=document.createElement("script");
-          sc.src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.js";sc.onload=ok;sc.onerror=no;document.head.appendChild(sc)});
-        this.sb=window.supabase.createClient(cfg.url,cfg.anonKey);
-        await this.loadAll();LIVE.mode="live";
-        this.sb.channel("cth-board")
-          .on("postgres_changes",{event:"INSERT",schema:"public",table:"posts"},pl=>this.incoming("posts",this.mapPost(pl.new)))
-          .on("postgres_changes",{event:"INSERT",schema:"public",table:"comments"},pl=>this.incoming("comments",this.mapComment(pl.new)))
-          .subscribe(st=>{
-            if(st==="SUBSCRIBED"){if(LIVE.mode!=="live"){LIVE.mode="live";this.loadAll().then(refreshLive)}}
-            else if(st==="CHANNEL_ERROR"||st==="TIMED_OUT"){LIVE.mode="error";refreshLive()}
-          });
+          sc.src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.js";sc.onload=ok;
+          sc.onerror=()=>no(new Error("Supabase 라이브러리를 불러오지 못했어요 (인터넷 연결 확인)"));document.head.appendChild(sc)});
+        this.sb=window.supabase.createClient(cfg.url.trim().replace(/\/+$/,""),cfg.anonKey.trim());
+        await this.loadAll();LIVE.mode="live";LIVE.err="";
+        this.listen();
         return;
-      }catch(e){console.error("Supabase 연결 실패, 체험 모드로 전환",e);LIVE.mode="error"}
+      }catch(e){
+        console.error("Supabase 연결 실패",e);LIVE.mode="error";LIVE.err=errText(e);
+        // 테이블을 방금 만들었거나 잠깐 끊긴 경우를 대비해 10초마다 다시 시도
+        if(this.sb)setTimeout(()=>this.retry(),10000);
+      }
     }
     if(LIVE.mode!=="error")LIVE.mode="local";
     try{const s=JSON.parse(localStorage.getItem("cth-live")||"null");if(s){LIVE.posts=s.posts||[];LIVE.comments=s.comments||[]}}catch(e){}
     try{this.bc=new BroadcastChannel("cth-live");this.bc.onmessage=e=>{
+      if(LIVE.mode==="live")return;
       const before=LIVE.posts.length+LIVE.comments.length;LIVE.posts=e.data.posts;LIVE.comments=e.data.comments;
       if(LIVE.posts.length+LIVE.comments.length>before)toast("새 글이나 댓글이 올라왔어요.");refreshLive()}}catch(e){}
   },
+  async retry(){
+    try{await this.loadAll();LIVE.mode="live";LIVE.err="";this.listen();toast("서버에 연결되었습니다.");refreshLive()}
+    catch(e){LIVE.err=errText(e);refreshLive();setTimeout(()=>this.retry(),10000)}
+  },
+  listen(){
+    if(this.ch)return;
+    LIVE.rt="connecting";
+    this.ch=this.sb.channel("cth-board")
+      .on("postgres_changes",{event:"INSERT",schema:"public",table:"posts"},pl=>this.incoming("posts",this.mapPost(pl.new)))
+      .on("postgres_changes",{event:"INSERT",schema:"public",table:"comments"},pl=>this.incoming("comments",this.mapComment(pl.new)))
+      .subscribe((st,err)=>{
+        if(st==="SUBSCRIBED"){LIVE.rt="ok";this.stopPoll();this.loadAll().then(refreshLive).catch(()=>{})}
+        else if(st==="CHANNEL_ERROR"||st==="TIMED_OUT"||st==="CLOSED"){console.warn("Realtime",st,err);LIVE.rt="fail";this.startPoll();refreshLive()}
+      });
+    // 실시간 연결이 늦어지면 그동안은 5초마다 새 글 확인
+    setTimeout(()=>{if(LIVE.rt!=="ok"){LIVE.rt="fail";this.startPoll();refreshLive()}},8000);
+  },
+  startPoll(){
+    if(this.poll)return;
+    this.poll=setInterval(async()=>{
+      const before=new Set([...LIVE.posts,...LIVE.comments].map(x=>x.id));
+      try{await this.loadAll()}catch(e){return}
+      const fresh=[...LIVE.posts,...LIVE.comments].filter(x=>!before.has(x.id)&&x.authorKey!==myKey());
+      if(fresh.length&&S.user)toast(fresh[0].title?`새 글이 올라왔어요: ${fresh[0].title}`:"새 댓글이 달렸어요.");
+      if(fresh.length)refreshLive();
+    },5000);
+  },
+  stopPoll(){if(this.poll){clearInterval(this.poll);this.poll=null}},
   mapPost(r){return {id:r.id,board:r.board,cat:r.cat,title:r.title,body:r.body,author:r.author,authorKey:r.author_key,status:r.status,done:r.done,ts:new Date(r.created_at).getTime()}},
   mapComment(r){return {id:r.id,postId:r.post_id,body:r.body,author:r.author,authorKey:r.author_key,ts:new Date(r.created_at).getTime()}},
   async loadAll(){
@@ -515,10 +543,20 @@ const DB={
     }else{LIVE.comments.push({...c,id:"c"+Date.now(),ts:Date.now()});this.saveLocal();refreshLive()}
   },
 };
+function errText(e){
+  const m=String((e&&(e.message||e.details||e.hint))||e||"");
+  if(/does not exist|schema cache|Could not find the table/i.test(m))return "게시판 테이블이 없어요. Supabase SQL Editor에서 supabase-setup.sql을 실행해 주세요.";
+  if(/permission denied|42501/i.test(m))return "읽기 권한이 없어요. SQL을 다시 실행해 주세요.";
+  if(/Invalid API key|JWT|apikey|401/i.test(m))return "API 키가 맞지 않아요. supabase-config.js의 키를 확인해 주세요.";
+  if(/Failed to fetch|NetworkError|Load failed/i.test(m))return "Supabase 주소에 접속하지 못했어요. URL이나 인터넷 연결을 확인해 주세요.";
+  return m.slice(0,120);
+}
 function liveBadge(){
-  return LIVE.mode==="live"?'<span class="live on">● 실시간 연결됨</span>'
-    :LIVE.mode==="error"?'<span class="live err">● 서버 연결 실패: 체험 모드로 동작 중</span>'
-    :'<span class="live">● 체험 모드: 이 브라우저에만 저장돼요</span>';
+  if(LIVE.mode==="live")return LIVE.rt==="ok"?'<span class="live on">● 실시간 연결됨</span>'
+    :LIVE.rt==="fail"?'<span class="live on">● 서버 연결됨 (5초마다 새 글 확인)</span>'
+    :'<span class="live on">● 서버 연결됨</span>';
+  if(LIVE.mode==="error")return `<span class="live err">● 서버 연결 실패: ${esc(LIVE.err||"원인 불명")} (10초마다 다시 시도 중)</span>`;
+  return '<span class="live">● 체험 모드: 이 브라우저에만 저장돼요</span>';
 }
 /* 실시간 갱신: 쓰던 글은 지우지 않고 화면만 새로 그림 */
 function refreshLive(){

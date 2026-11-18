@@ -42,6 +42,11 @@ create policy "posts_insert" on public.posts for insert to anon, authenticated
 create policy "comments_read"   on public.comments for select to anon, authenticated using (true);
 create policy "comments_insert" on public.comments for insert to anon, authenticated with check (true);
 
+-- 3-1) 사이트(anon)에서 테이블을 읽고 쓸 수 있도록 권한 부여
+grant usage on schema public to anon, authenticated;
+grant select, insert on public.posts    to anon, authenticated;
+grant select, insert on public.comments to anon, authenticated;
+
 -- 4) 실시간(Realtime) 켜기: 새 글·댓글을 접속한 모든 사람에게 바로 전송
 do $$
 begin
