@@ -324,7 +324,7 @@ footer.ft{background:#2b2f36;color:#a7adb7;font-size:.82rem}
       <p class="err" id="loginErr" role="alert"></p>
       <button class="btn lg" type="submit">로그인</button>
       <div class="lb-links"><span>세대 인증 신청</span><span>비밀번호 찾기</span><span>이용 안내</span></div>
-      <p class="lb-note">시연용 계정: 102동 102호 / 비밀번호 1234</p>
+      <p class="lb-note">시연용 계정 (102동)<br>101호 / 1111 · 102호 / 1234 · 202호 / 2222<br>303호 / 3333 · 404호 / 4444</p>
     </form>
   </div>
   <div class="login-foot">충남더힐 입주자대표회의 · 관리사무소 TEL 031-000-1234 · 본 사이트는 디자인씽킹 수업 프로토타입입니다.</div>
@@ -360,7 +360,14 @@ footer.ft{background:#2b2f36;color:#a7adb7;font-size:.82rem}
 
 <script src="supabase-config.js"></script>
 <script>
-const ACCOUNT={dong:"102",ho:"102",pw:"1234"};
+// 시연용 세대 계정 (동, 호수, 비밀번호)
+const ACCOUNTS=[
+  {dong:"102",ho:"101",pw:"1111"},
+  {dong:"102",ho:"102",pw:"1234"},
+  {dong:"102",ho:"202",pw:"2222"},
+  {dong:"102",ho:"303",pw:"3333"},
+  {dong:"102",ho:"404",pw:"4444"},
+];
 const MENU=[
   {id:"news",t:"단지소식",d:"충남더힐의 공지와 소식을 전해드립니다",subs:[["notice","공지사항"],["newcomer","새 이웃 소개"]]},
   {id:"events",t:"동 행사",d:"매주 토요일, 한 동씩 돌아가며 여는 주민 행사",subs:[["month","이달의 행사"],["program","행사 진행 안내"],["review","행사 후기"],["vote","다음 행사 투표"]]},
@@ -493,6 +500,8 @@ const DB={
     this.ch=this.sb.channel("cth-board")
       .on("postgres_changes",{event:"INSERT",schema:"public",table:"posts"},pl=>this.incoming("posts",this.mapPost(pl.new)))
       .on("postgres_changes",{event:"INSERT",schema:"public",table:"comments"},pl=>this.incoming("comments",this.mapComment(pl.new)))
+      .on("postgres_changes",{event:"DELETE",schema:"public",table:"posts"},pl=>pl.old&&pl.old.id&&this.removed("posts",pl.old.id))
+      .on("postgres_changes",{event:"DELETE",schema:"public",table:"comments"},pl=>pl.old&&pl.old.id&&this.removed("comments",pl.old.id))
       .subscribe((st,err)=>{
         if(st==="SUBSCRIBED"){LIVE.rt="ok";this.stopPoll();this.loadAll().then(refreshLive).catch(()=>{})}
         else if(st==="CHANNEL_ERROR"||st==="TIMED_OUT"||st==="CLOSED"){console.warn("Realtime",st,err);LIVE.rt="fail";this.startPoll();refreshLive()}
@@ -505,7 +514,9 @@ const DB={
     this.poll=setInterval(async()=>{
       const before=new Set([...LIVE.posts,...LIVE.comments].map(x=>x.id));
       try{await this.loadAll()}catch(e){return}
-      const fresh=[...LIVE.posts,...LIVE.comments].filter(x=>!before.has(x.id)&&x.authorKey!==myKey());
+      const now=[...LIVE.posts,...LIVE.comments];
+      const fresh=now.filter(x=>!before.has(x.id)&&x.authorKey!==myKey());
+      if(now.length!==before.size&&!fresh.length){if(S.postView&&!findPost(S.postView))S.postView=null;refreshLive()}
       if(fresh.length&&S.user)toast(fresh[0].title?`새 글이 올라왔어요: ${fresh[0].title}`:"새 댓글이 달렸어요.");
       if(fresh.length)refreshLive();
     },5000);
@@ -535,6 +546,18 @@ const DB={
       if(error)throw error;this.incoming("posts",this.mapPost(data));
     }else{LIVE.posts.unshift({...p,id:"l"+Date.now(),ts:Date.now()});this.saveLocal();refreshLive()}
   },
+  async deletePost(id){
+    if(LIVE.mode==="live"){
+      const {data,error}=await this.sb.rpc("delete_suggestion",{p_id:id,p_author_key:myKey()});
+      if(error)throw error;if(!data)throw new Error("본인이 쓴 글만 삭제할 수 있어요.");
+    }
+    this.removed("posts",id);if(LIVE.mode!=="live")this.saveLocal();
+  },
+  removed(kind,id){
+    if(kind==="posts"){LIVE.posts=LIVE.posts.filter(p=>p.id!==id);LIVE.comments=LIVE.comments.filter(c=>c.postId!==id);if(S.postView===id)S.postView=null}
+    else LIVE.comments=LIVE.comments.filter(c=>c.id!==id);
+    refreshLive();
+  },
   async addComment(c){
     c={...c,authorKey:myKey()};
     if(LIVE.mode==="live"){
@@ -545,6 +568,7 @@ const DB={
 };
 function errText(e){
   const m=String((e&&(e.message||e.details||e.hint))||e||"");
+  if(/delete_suggestion|Could not find the function/i.test(m))return "삭제 기능용 SQL이 아직 실행되지 않았어요. Supabase에서 실행해 주세요.";
   if(/does not exist|schema cache|Could not find the table/i.test(m))return "게시판 테이블이 없어요. Supabase SQL Editor에서 supabase-setup.sql을 실행해 주세요.";
   if(/permission denied|42501/i.test(m))return "읽기 권한이 없어요. SQL을 다시 실행해 주세요.";
   if(/Invalid API key|JWT|apikey|401/i.test(m))return "API 키가 맞지 않아요. supabase-config.js의 키를 확인해 주세요.";
@@ -576,7 +600,7 @@ $("#loginForm").addEventListener("submit",e=>{
   e.preventDefault();
   const d=$("#inDong").value.replace(/\D/g,""),h=$("#inHo").value.replace(/\D/g,""),p=$("#inPw").value,err=$("#loginErr");
   if(!d||!h||!p){err.textContent="동, 호수, 비밀번호를 모두 입력해 주세요.";return}
-  if(d!==ACCOUNT.dong||h!==ACCOUNT.ho||p!==ACCOUNT.pw){err.textContent="동·호수 또는 비밀번호가 일치하지 않습니다.";$("#inPw").value="";return}
+  if(!ACCOUNTS.some(a=>a.dong===d&&a.ho===h&&a.pw===p)){err.textContent="동·호수 또는 비밀번호가 일치하지 않습니다.";$("#inPw").value="";return}
   err.textContent="";S.user={dong:d+"동",ho:h+"호"};
   $("#login").style.display="none";$("#app").style.display="block";
   $("#whoName").textContent=`${S.user.dong} ${S.user.ho}`;updateTop();go("home");
@@ -798,7 +822,7 @@ function boardPage(board){
       <ul>${cm.map(c=>`<li class="${c.staff?"staff":""} ${c.authorKey&&c.authorKey===myKey()?"mine":""}"><div class="ch"><b>${esc(c.author)}</b>${c.staff?'<span class="cat" style="margin:0 0 0 6px">답변</span>':""}<span class="num">${fmtFull(c.ts)}</span></div><p>${esc(c.body)}</p></li>`).join("")||'<li class="empty">첫 댓글을 남겨 보세요.</li>'}</ul>
       <form id="cmtForm" class="cform"><label for="cmt" class="sr">댓글 입력</label><textarea id="cmt" rows="3" maxlength="500" placeholder="${board==="suggest"?"이 건의에 대한 의견을 남겨 주세요":"댓글로 이웃과 약속을 잡아 보세요"}"></textarea><button class="btn">댓글 등록</button></form>
     </div>
-    <div class="btns"><button class="btn line" id="backP">목록</button></div>`;
+    <div class="btns">${board==="suggest"&&p.authorKey&&p.authorKey===myKey()?'<button class="btn line" id="delP" style="color:#c0392b;border-color:#e3b3ab">삭제</button>':""}<button class="btn line" id="backP">목록</button></div>`;
   }
   const list=allPosts(board).filter(p=>S.sub==="전체"||p.cat===S.sub);
   return `<div class="intro"><b>${cfg.intro[0]}</b><p class="desc">${cfg.intro[1]}</p></div>
@@ -810,6 +834,11 @@ function bindBoard(board){
   const cfg=BOARD[board];
   on("[data-pv]",b=>{S.postView=b.dataset.pv;render();window.scrollTo(0,0)});
   $("#backP")&&($("#backP").onclick=()=>{S.postView=null;render()});
+  $("#delP")&&($("#delP").onclick=()=>modal("글 삭제",'<p class="desc">이 건의 글을 삭제할까요? 달린 댓글도 함께 지워지고 되돌릴 수 없어요.</p>',"삭제",()=>{
+    const id=S.postView;
+    DB.deletePost(id).then(()=>{toast("글이 삭제되었습니다.");S.postView=null;refreshLive()})
+      .catch(err=>{console.error(err);toast(errText(err)||"삭제에 실패했어요.")});
+  }));
   const cf=$("#cmtForm");
   if(cf)cf.onsubmit=async e=>{e.preventDefault();const t=$("#cmt"),body=t.value.trim();if(!body)return;
     const btn=cf.querySelector("button");btn.disabled=true;

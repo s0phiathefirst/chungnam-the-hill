@@ -58,5 +58,27 @@ begin
   end if;
 end $$;
 
+-- 5) 건의함 글 삭제: 글쓴이 본인만 삭제 가능 (댓글도 함께 삭제)
+create or replace function public.delete_suggestion(p_id uuid, p_author_key text)
+returns boolean
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  n int;
+begin
+  delete from public.posts
+   where id = p_id and board = 'suggest' and author_key = p_author_key;
+  get diagnostics n = row_count;
+  if n > 0 then
+    delete from public.comments where post_id = p_id::text;
+  end if;
+  return n > 0;
+end $$;
+
+revoke all on function public.delete_suggestion(uuid, text) from public;
+grant execute on function public.delete_suggestion(uuid, text) to anon, authenticated;
+
 -- (선택) 건의 처리 상태를 바꾸고 싶을 때는 Table Editor 에서 status 값을 직접 수정하거나 아래처럼 실행
 -- update public.posts set status = '답변완료' where id = '글의 id';
