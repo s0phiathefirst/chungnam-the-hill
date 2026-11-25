@@ -89,7 +89,7 @@ header.hd{border-bottom:1px solid var(--line);background:#fff;position:relative;
 .logo .tx small{font-size:.66rem;color:var(--muted);letter-spacing:.12em}
 .gnb{display:flex;margin-left:auto;height:100%}
 .gnb>li{position:relative;height:100%}
-.gnb>li>button{height:100%;background:none;border:0;padding:0 17px;font-size:1.05rem;font-weight:700;color:var(--ink);border-bottom:3px solid transparent}
+.gnb>li>button{height:100%;background:none;border:0;padding:0 13px;font-size:1.05rem;font-weight:700;color:var(--ink);border-bottom:3px solid transparent}
 .gnb>li>button.on,.gnb>li:hover>button{color:var(--blue);border-bottom-color:var(--blue)}
 .gnb .dep2{display:none;position:absolute;top:100%;left:50%;transform:translateX(-50%);min-width:150px;background:#fff;border:1px solid var(--line);border-top:2px solid var(--blue);padding:8px 0;box-shadow:0 6px 14px rgba(0,0,0,.08)}
 .gnb>li:hover .dep2,.gnb>li:focus-within .dep2{display:block}
@@ -285,6 +285,44 @@ tr.mine .rankbar i{background:var(--point)}
 .cform textarea:focus{border-color:var(--blue);outline:none}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 @media (max-width:600px){.cform{grid-template-columns:1fr}}
+.feat{list-style:none;margin:0;padding:0;border-top:2px solid var(--ink)}
+.feat li{display:grid;grid-template-columns:44px 1fr auto;gap:14px;align-items:center;padding:14px 6px;border-bottom:1px solid var(--line)}
+.feat .no{font-size:1.25rem;font-weight:900;color:var(--blue)}
+.feat b{font-size:1rem}.feat p{color:#555;font-size:.9rem;margin-top:2px}
+.calnav{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.calnav h4{font-size:1.15rem;font-weight:700}
+.badges{display:flex;gap:8px;flex-wrap:wrap}
+.bdg{border:1px solid var(--line);padding:6px 12px;font-size:.88rem;color:#999}
+.bdg.on{border-color:var(--blue);color:var(--blue);background:#eef4ff;font-weight:500}
+.tbl.bingo{min-width:0}
+@media (max-width:600px){.feat li{grid-template-columns:34px 1fr}.feat li>button,.feat li>span:last-child{grid-column:2;justify-self:start}}
+/* 휴대폰 화면 */
+.gnb>li{flex:none}.gnb>li>button{white-space:nowrap}
+.cols>div,.cont>*,.sect>*,.sub>*{min-width:0}
+.nlist li>span:first-child{min-width:0;display:flex;align-items:center}
+.nlist li>span:first-child .cat,.nlist li>span:first-child .new{flex:none}
+.nlist li>span:first-child button{min-width:0;flex:0 1 auto}
+@media (max-width:700px){
+  .util .wrap>span{display:none}
+  .util .wrap{justify-content:flex-end;height:auto;padding:6px 12px}
+  .util ul{flex-wrap:wrap;justify-content:flex-end;row-gap:2px}
+  .util li+li::before{margin:0 6px}
+  .hd .wrap{padding:10px 12px 0}
+  .logo .tx b{font-size:1.2rem}
+  .gnb{scrollbar-width:none}.gnb::-webkit-scrollbar{display:none}
+  .gnb>li>button{padding:10px 10px 12px;font-size:.92rem}
+  .wrap{padding:0 14px}
+  .sub{padding:24px 14px 50px}
+  .cont-h h3{font-size:1.35rem}
+  .sv{height:140px}.sv h2{font-size:1.5rem}
+  .mv{height:auto}.mv .wrap{padding-top:44px;padding-bottom:84px}
+  .mv p{font-size:.9rem}
+  .util li.mhide{display:none}
+  .bbar .srch input{width:120px}
+  .ptbox div{padding:14px 6px}.ptbox b{font-size:1.4rem}
+  .calnav h4{font-size:1rem;order:-1;width:100%}
+  .quick button{font-size:.82rem;padding:14px 4px 12px}
+}
 /* 푸터 */
 footer.ft{background:#2b2f36;color:#a7adb7;font-size:.82rem}
 .ft .links{border-bottom:1px solid #3c414a}
@@ -334,7 +372,7 @@ footer.ft{background:#2b2f36;color:#a7adb7;font-size:.82rem}
 <div id="app">
   <div class="util"><div class="wrap">
     <span>충남더힐 아파트 입주민 전용 커뮤니티</span>
-    <ul><li><b id="whoName">102동 102호</b>님</li><li>정 포인트 <b id="whoPt" class="num">0</b></li><li><button data-nav="my">마이페이지</button></li><li><button id="logout">로그아웃</button></li></ul>
+    <ul><li><button data-nav="about">사이트 소개</button></li><li><b id="whoName">102동 102호</b>님</li><li>정 포인트 <b id="whoPt" class="num">0</b></li><li class="mhide"><button data-nav="my">마이페이지</button></li><li><button id="logout">로그아웃</button></li></ul>
   </div></div>
   <header class="hd"><div class="wrap">
     <button class="logo" data-nav="home" aria-label="충남더힐 홈">
@@ -369,6 +407,7 @@ const ACCOUNTS=[
   {dong:"102",ho:"404",pw:"4444"},
 ];
 const MENU=[
+  {id:"about",t:"이웃정 소개",d:"충남더힐 주민 커뮤니티 '이웃정'의 기능을 소개합니다",subs:[["features","기능 한눈에 보기"],["demo","시연 계정 안내"]]},
   {id:"news",t:"단지소식",d:"충남더힐의 공지와 소식을 전해드립니다",subs:[["notice","공지사항"],["newcomer","새 이웃 소개"]]},
   {id:"events",t:"동 행사",d:"매주 토요일, 한 동씩 돌아가며 여는 주민 행사",subs:[["month","이달의 행사"],["program","행사 진행 안내"],["review","행사 후기"],["vote","다음 행사 투표"]]},
   {id:"share",t:"나눔·품앗이",d:"남는 것은 나누고, 필요한 도움은 부탁해요",subs:[["전체","전체"],["나눔","나눔"],["품앗이","품앗이"],["공동구매","공동구매"]]},
@@ -378,54 +417,67 @@ const MENU=[
   {id:"my",t:"마이페이지",d:"나의 이웃 활동과 설정",subs:[["act","나의 활동"],["set","공개 범위·화면 설정"]]},
 ];
 const S={
-  user:null,view:"home",sub:null,points:120,selEvent:"e2",homeTab:0,postView:null,noticeView:null,
-  history:[
-    {d:"2026.11.07",t:"207동 푸드트럭 데이 손님 참여",p:10},
-    {d:"2026.11.02",t:"나눔 게시판: 아기 바운서 나눔",p:20},
-    {d:"2026.10.24",t:"101동 야시장 후기 작성",p:10},
-    {d:"2026.10.12",t:"신규 입주민 환영 인사",p:5},
-  ],
-  notices:[
-    {c:"공지",t:"102동 엘리베이터 정기 점검 안내 (11/13 10:00~12:00)",d:"2026.11.11",v:84,w:"관리사무소",b:"11월 13일(목) 오전 10시부터 12시까지 102동 1·2호기 엘리베이터 정기 점검이 있습니다. 점검 시간에는 계단을 이용해 주시기 바랍니다."},
-    {c:"행사",t:"[102동] 11월 14일 이웃 한 상 행사 역할 모집",d:"2026.11.09",v:152,w:"이웃정 운영위",b:"이번 주 토요일은 102동이 주관하는 '이웃 한 상' 행사가 열립니다. 동 행사 > 이달의 행사 메뉴에서 비어 있는 역할을 신청해 주세요."},
-    {c:"행사",t:"207동 푸드트럭 데이 후기 사진 게시",d:"2026.11.08",v:97,w:"이웃정 운영위",b:"지난 11월 7일 207동 푸드트럭 데이에 참여해 주신 모든 이웃께 감사드립니다. 행사 후기 게시판에서 사진을 확인하세요."},
-    {c:"공지",t:"겨울철 수도 동파 예방 안내",d:"2026.11.06",v:63,w:"관리사무소",b:"기온이 영하로 내려가는 날에는 수도꼭지를 조금 열어 두시고, 계량기함 보온재 상태를 확인해 주세요."},
-    {c:"투표",t:"12월 201동 행사 주제 투표 진행 (~11/20)",d:"2026.11.05",v:121,w:"이웃정 운영위",b:"12월 첫째 주 201동 행사 주제를 정하는 투표가 진행 중입니다. 다른 동 주민도 투표할 수 있습니다."},
-    {c:"공지",t:"재활용 분리배출 요일 변경 (매주 화·금)",d:"2026.11.01",v:205,w:"관리사무소",b:"11월부터 재활용 분리배출 요일이 매주 화요일과 금요일로 변경됩니다."},
-    {c:"공지",t:"커뮤니티룸 예약 방법 변경 안내",d:"2026.10.28",v:77,w:"관리사무소",b:"커뮤니티룸 예약은 이제 관리사무소 방문 없이 소모임 메뉴에서 신청할 수 있습니다."},
-  ],
-  events:{
-    e1:{id:"e1",date:7,dong:"207동",title:"207동 푸드트럭 데이",place:"207동 앞 광장",time:"11월 7일(토) 17:00~20:00",status:"done",
-      roles:[["101호","떡볶이",1],["102호","떡볶이",1],["202호","회오리감자",1],["305호","어묵꼬치",1],["401호","붕어빵",1],["503호","음료·식혜",1]]},
-    e2:{id:"e2",date:14,dong:"102동",title:"102동 이웃 한 상",place:"102동 옆 어린이 놀이터",time:"11월 14일(토) 16:00~19:00",status:"open",
-      roles:[["101호","장터 · 수제 쿠키",1],["201호","장터 · 아이 옷·장난감 나눔",1],["302호","한 상 · 따뜻한 어묵탕",1],["501호","오프닝 진행",1],[null,"장터 · 음료 부스 (유자차·핫초코)",0],[null,"이웃 빙고 운영",0],[null,"층별 대항전 심판",0],[null,"사진 기록",0],[null,"마감 정리·분리수거",0]]},
-    e3:{id:"e3",date:21,dong:"105동",title:"105동 야시장",place:"105동 필로티",time:"11월 21일(토) 18:00~21:00",status:"soon",
-      roles:[["103호","호떡",1],["204호","닭꼬치",1],["601호","핸드메이드 액세서리",1],[null,"조명·전구 설치",0]]},
-    e4:{id:"e4",date:28,dong:"203동",title:"203동 김장 나눔",place:"203동 커뮤니티룸",time:"11월 28일(토) 10:00~14:00",status:"soon",
-      roles:[["102호","절임배추 준비",1],["301호","양념 만들기",1],[null,"수육 삶기",0],[null,"포장·배달 (어르신 세대)",0]]},
-  },
-  going:{},
-  votes:[{t:"201동 크리스마스 마켓",n:48},{t:"201동 영화 상영의 밤",n:31},{t:"201동 보드게임 대회",n:17}],myVote:null,
-  clubs:[
-    {n:"더힐 새벽 러닝",w:"화·목 06:30",p:"단지 둘레길 3km",m:12,max:20,joined:false,tag:"운동"},
-    {n:"한 달 한 권 독서 모임",w:"매월 마지막 금 20:00",p:"커뮤니티룸",m:8,max:10,joined:false,tag:"취미"},
-    {n:"금요 보드게임",w:"격주 금 19:30",p:"102동 작은도서관",m:6,max:12,joined:false,tag:"취미"},
-    {n:"공동육아 놀이터 모임",w:"토 10:00",p:"102동 옆 놀이터",m:15,max:25,joined:false,tag:"육아"},
-    {n:"반려견 산책 메이트",w:"매일 21:00",p:"정문 앞 집결",m:9,max:15,joined:false,tag:"반려동물"},
-    {n:"1인 가구 반찬 나눔",w:"격주 일 17:00",p:"커뮤니티룸",m:7,max:12,joined:false,tag:"청년"},
-  ],
-  dongs:{"101동":540,"102동":0,"105동":610,"106동":380,"201동":455,"203동":505,"207동":720},
+  user:null,view:"home",sub:null,selEvent:null,calMonth:null,homeTab:0,postView:null,noticeView:null,noticeViews:{},
   settings:{showHo:true,showClubs:true,alarm:true,big:false},
 };
-const DONG_BASE=470;
 const $=s=>document.querySelector(s);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const me=()=>S.user.ho+" (나)";
 function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove("on"),2200)}
-function addPoints(p,t){S.points+=p;S.history.unshift({d:"2026.11.11",t,p});updateTop();toast(`${t} · 정 포인트 +${p}`)}
-function subPoints(p){S.points-=p;S.history.shift();updateTop()}
-function updateTop(){$("#whoPt").textContent=S.points;S.dongs["102동"]=DONG_BASE+S.points}
-function rankOf(d){return Object.entries(S.dongs).sort((a,b)=>b[1]-a[1]).findIndex(x=>x[0]===d)+1}
+/* ---------- 날짜 ---------- */
+const pad=n=>String(n).padStart(2,"0");
+const ymd=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const TODAY=()=>ymd(new Date());
+const DOW="일월화수목금토";
+const HOUR=3600*1000,DAY=24*HOUR;
+const hoursAgo=h=>Date.now()-h*HOUR;
+const dotDate=ts=>{const d=new Date(ts);return `${d.getFullYear()}.${pad(d.getMonth()+1)}.${pad(d.getDate())}`};
+function evDate(e){const [y,m,d]=e.date.split("-").map(Number);return new Date(y,m-1,d)}
+function evDay(e){const d=evDate(e);return `${d.getMonth()+1}월 ${d.getDate()}일(${DOW[d.getDay()]})`}
+function evLabel(e){return `${evDay(e)} ${e.time_text}`}
+function dday(e){const diff=Math.round((evDate(e)-new Date(TODAY()+"T00:00"))/DAY);return diff===0?"D-DAY":diff>0?`D-${diff}`:"종료"}
+
+/* ---------- 동 행사 ---------- */
+const evs=()=>LIVE.events.slice().sort((a,b)=>a.date<b.date?-1:1);
+const evById=id=>LIVE.events.find(e=>e.id===id);
+const isPast=e=>e.date<TODAY();
+const rolesOf=id=>LIVE.roles.filter(r=>r.event_id===id).sort((a,b)=>a.sort-b.sort);
+const goingOf=id=>LIVE.going.filter(g=>g.event_id===id);
+const nextEvents=()=>evs().filter(e=>!isPast(e));
+const myDongNext=()=>nextEvents().find(e=>S.user&&e.dong===S.user.dong)||nextEvents()[0]||evs().slice(-1)[0];
+function evStatus(e){if(isPast(e))return ["end","행사 종료"];const open=rolesOf(e.id).filter(r=>!r.ho).length;return open?["wait",`역할 ${open}개 모집 중`]:["ok","준비 완료"]}
+
+/* ---------- 투표 ---------- */
+const POLL={id:"201-winter",title:"201동 겨울 행사(12월 12일) 주제 투표",period:"투표 마감 12월 5일(토) · 모든 동 주민이 참여할 수 있습니다.",opts:["크리스마스 마켓","영화 상영의 밤","보드게임 대회"],base:[48,31,17]};
+function pollCounts(){const c=POLL.base.slice();LIVE.votes.filter(v=>v.poll_id===POLL.id).forEach(v=>{if(c[v.option]!=null)c[v.option]++});return c}
+function myVote(){const v=LIVE.votes.find(v=>v.poll_id===POLL.id&&v.user_key===myKey());return v?v.option:null}
+
+/* ---------- 소모임 ---------- */
+const clubsSorted=()=>LIVE.clubs.slice().sort((a,b)=>(a.sort-b.sort)||(String(a.created_at)<String(b.created_at)?-1:1));
+const clubCount=c=>c.base_members+LIVE.members.filter(m=>m.club_id===c.id).length;
+const inClub=c=>LIVE.members.some(m=>m.club_id===c.id&&m.user_key===myKey());
+
+/* ---------- 정 포인트 ---------- */
+const DONG_BASE={"101동":540,"102동":150,"105동":610,"106동":380,"201동":455,"203동":505,"207동":720};
+function dongTotals(){const t={...DONG_BASE};LIVE.pts.forEach(p=>{t[p.dong]=(t[p.dong]||0)+p.points});return t}
+function rankOf(d){return Object.entries(dongTotals()).sort((a,b)=>b[1]-a[1]).findIndex(x=>x[0]===d)+1}
+const myPts=()=>LIVE.pts.filter(p=>p.user_key===myKey()).sort((a,b)=>String(b.created_at).localeCompare(String(a.created_at)));
+const myPoints=()=>myPts().reduce((a,p)=>a+p.points,0);
+function updateTop(){if(S.user)$("#whoPt").textContent=myPoints()}
+async function addPoints(p,reason){
+  try{const r=await DB.rpc("add_points",{p_key:myKey(),p_reason:reason,p_points:p});if(r==="ok")toast(`${reason} · 정 포인트 +${p}`)}
+  catch(e){console.error(e)}
+}
+const RPC_MSG={closed:"이미 끝난 행사예요.",wrong_dong:"역할은 행사를 여는 동 주민만 맡을 수 있어요.",taken:"방금 다른 이웃이 먼저 맡았어요.",already:"한 행사에서는 역할을 하나만 맡을 수 있어요.",
+  own_dong:"우리 동 행사는 역할 신청으로 참여해 주세요.",full:"정원이 다 찼어요.",not_mine:"내가 맡은 역할만 취소할 수 있어요.",too_many:"소모임은 한 세대에 3개까지 만들 수 있어요.",
+  bad_label:"역할 이름을 1~40자로 입력해 주세요.",bad_name:"모임 이름을 1~30자로 입력해 주세요.",not_found:"정보를 찾지 못했어요. 새로고침해 주세요.",bad_key:"로그인 정보를 확인해 주세요."};
+async function act(name,args,okMsg){
+  try{const r=await DB.rpc(name,{...args,p_key:myKey()});
+    if(typeof okMsg==="function")okMsg=okMsg(r);
+    if(okMsg&&!RPC_MSG[r])toast(okMsg);else if(RPC_MSG[r])toast(RPC_MSG[r]);
+    return r}
+  catch(e){console.error(e);toast(errText(e)||"처리하지 못했어요. 잠시 후 다시 시도해 주세요.")}
+}
 
 /* =====================================================================
    실시간 게시판 (나눔·품앗이, 건의함)
@@ -433,28 +485,32 @@ function rankOf(d){return Object.entries(S.dongs).sort((a,b)=>b[1]-a[1]).findInd
      (다른 사람이 쓴 글·댓글이 새로고침 없이 바로 보임)
    - 설정이 없으면: 체험 모드 (이 브라우저 안에서만 저장, 같은 브라우저의 다른 탭과는 실시간 동기화)
    ===================================================================== */
-const T=(y,m,d,h=12)=>new Date(y,m-1,d,h).getTime();
+const T=h=>hoursAgo(h);  // 예시 글: 지금으로부터 h시간 전
 const SEED_POSTS=[
-  {id:"s1",board:"share",cat:"나눔",title:"유아용 바운서 드려요 (상태 좋아요)",author:"104동 802호",ts:T(2026,11,11,9),body:"아이가 커서 더 이상 안 써요. 102동 경비실 앞에서 전달해 드릴게요.",done:false},
-  {id:"s2",board:"share",cat:"품앗이",title:"이번 주 택배 대신 받아주실 분 계실까요?",author:"102동 504호",ts:T(2026,11,11,8),body:"수~금 출장이라 택배 2개만 받아주시면 귤 한 봉지 드릴게요!",done:false},
-  {id:"s3",board:"share",cat:"공동구매",title:"제주 감귤 10kg 같이 사요 (4세대 모집)",author:"106동 301호",ts:T(2026,11,10),body:"10kg 한 박스를 4집이 나누면 한 집에 7천 원 정도예요. 2자리 남았어요.",done:false},
-  {id:"s4",board:"share",cat:"품앗이",title:"초등 수학 숙제 봐드려요 (대학생)",author:"102동 1101호",ts:T(2026,11,10,9),body:"평일 저녁 7시 이후에 커뮤니티룸에서 1시간씩 가능해요. 사례는 안 받아요.",done:false},
-  {id:"s5",board:"share",cat:"나눔",title:"김장하고 남은 무 5개 가져가세요",author:"203동 102호",ts:T(2026,11,9),body:"현관 앞에 두었어요. 필요한 만큼만 가져가 주세요.",done:true},
-  {id:"s6",board:"share",cat:"품앗이",title:"전동드릴 빌려드립니다",author:"105동 703호",ts:T(2026,11,7),body:"선반 다실 분들 편하게 연락 주세요. 주말에는 집에 있어요.",done:false},
-  {id:"g1",board:"suggest",cat:"시설",title:"102동 앞 놀이터 가로등이 너무 어두워요",author:"102동 주민",ts:T(2026,11,10,21),body:"저녁에 아이들과 지나가기 무서울 정도예요. 행사 때도 어두워서 조명이 더 있으면 좋겠습니다.",status:"답변완료"},
-  {id:"g2",board:"suggest",cat:"행사",title:"동 행사를 평일 저녁에도 한 번 열어 주세요",author:"105동 1203호",ts:T(2026,11,9,22),body:"주말 근무라 토요일 행사에 한 번도 못 갔어요. 금요일 저녁 행사도 있으면 좋겠습니다.",status:"검토중"},
-  {id:"g3",board:"suggest",cat:"커뮤니티",title:"1인 가구 이웃끼리 모이는 자리가 있으면 좋겠어요",author:"익명",ts:T(2026,11,8),body:"혼자 살다 보니 이웃을 알 기회가 거의 없어요. 처음 오는 사람도 부담 없는 자리가 있었으면 해요.",status:"답변완료"},
-  {id:"g4",board:"suggest",cat:"기타",title:"분리수거장 안내문을 큰 글씨로 바꿔 주세요",author:"201동 302호",ts:T(2026,11,6),body:"어르신들이 안내문을 잘 못 읽으셔서 자주 헷갈려 하세요.",status:"접수"},
+  {id:"s1",board:"share",cat:"나눔",title:"유아용 바운서 드려요 (상태 좋아요)",author:"104동 802호",ts:T(3),body:"아이가 커서 더 이상 안 써요. 102동 경비실 앞에서 전달해 드릴게요.",done:false},
+  {id:"s2",board:"share",cat:"품앗이",title:"이번 주 택배 대신 받아주실 분 계실까요?",author:"102동 504호",ts:T(5),body:"수~금 출장이라 택배 2개만 받아주시면 귤 한 봉지 드릴게요!",done:false},
+  {id:"s3",board:"share",cat:"공동구매",title:"제주 감귤 10kg 같이 사요 (4세대 모집)",author:"106동 301호",ts:T(27),body:"10kg 한 박스를 4집이 나누면 한 집에 7천 원 정도예요. 2자리 남았어요.",done:false},
+  {id:"s4",board:"share",cat:"품앗이",title:"초등 수학 숙제 봐드려요 (대학생)",author:"102동 1101호",ts:T(30),body:"평일 저녁 7시 이후에 커뮤니티룸에서 1시간씩 가능해요. 사례는 안 받아요.",done:false},
+  {id:"s5",board:"share",cat:"나눔",title:"김장하고 남은 무 5개 가져가세요",author:"203동 102호",ts:T(52),body:"현관 앞에 두었어요. 필요한 만큼만 가져가 주세요.",done:true},
+  {id:"s6",board:"share",cat:"품앗이",title:"전동드릴 빌려드립니다",author:"105동 703호",ts:T(100),body:"선반 다실 분들 편하게 연락 주세요. 주말에는 집에 있어요.",done:false},
+  {id:"g1",board:"suggest",cat:"시설",title:"102동 앞 놀이터 가로등이 너무 어두워요",author:"102동 주민",ts:T(20),body:"저녁에 아이들과 지나가기 무서울 정도예요. 행사 때도 어두워서 조명이 더 있으면 좋겠습니다.",status:"답변완료"},
+  {id:"g2",board:"suggest",cat:"행사",title:"동 행사를 평일 저녁에도 한 번 열어 주세요",author:"105동 1203호",ts:T(44),body:"주말 근무라 토요일 행사에 한 번도 못 갔어요. 금요일 저녁 행사도 있으면 좋겠습니다.",status:"검토중"},
+  {id:"g3",board:"suggest",cat:"커뮤니티",title:"1인 가구 이웃끼리 모이는 자리가 있으면 좋겠어요",author:"익명",ts:T(75),body:"혼자 살다 보니 이웃을 알 기회가 거의 없어요. 처음 오는 사람도 부담 없는 자리가 있었으면 해요.",status:"답변완료"},
+  {id:"g4",board:"suggest",cat:"기타",title:"분리수거장 안내문을 큰 글씨로 바꿔 주세요",author:"201동 302호",ts:T(120),body:"어르신들이 안내문을 잘 못 읽으셔서 자주 헷갈려 하세요.",status:"접수"},
 ];
 const SEED_COMMENTS=[
-  {id:"sc1",postId:"s2",author:"102동 803호",ts:T(2026,11,11,10),body:"제가 재택이라 받아드릴게요! 쪽지 드렸어요."},
-  {id:"sc2",postId:"s3",author:"106동 1502호",ts:T(2026,11,10,15),body:"저도 참여할게요. 한 자리 남았네요!"},
-  {id:"gc1",postId:"g1",author:"관리사무소",staff:true,ts:T(2026,11,11,10),body:"확인 후 11월 13일에 LED 가로등 2개를 추가 설치했습니다. 불편을 드려 죄송합니다."},
-  {id:"gc2",postId:"g2",author:"이웃정 운영위",staff:true,ts:T(2026,11,10,11),body:"좋은 의견 감사합니다. 12월 운영위 회의에서 금요일 저녁 행사를 안건으로 다루겠습니다."},
-  {id:"gc3",postId:"g2",author:"201동 1104호",ts:T(2026,11,10,13),body:"저도 찬성이에요. 평일 저녁이면 퇴근하고 갈 수 있어요."},
-  {id:"gc4",postId:"g3",author:"이웃정 운영위",staff:true,ts:T(2026,11,9,10),body:"'1인 가구 반찬 나눔' 소모임이 새로 생겼어요. 소모임 메뉴에서 가입하실 수 있습니다."},
+  {id:"sc1",postId:"s2",author:"102동 803호",ts:T(2),body:"제가 재택이라 받아드릴게요! 쪽지 드렸어요."},
+  {id:"sc2",postId:"s3",author:"106동 1502호",ts:T(22),body:"저도 참여할게요. 한 자리 남았네요!"},
+  {id:"gc1",postId:"g1",author:"관리사무소",staff:true,ts:T(8),body:"확인 후 LED 가로등 2개를 추가 설치했습니다. 불편을 드려 죄송합니다."},
+  {id:"gc2",postId:"g2",author:"이웃정 운영위",staff:true,ts:T(30),body:"좋은 의견 감사합니다. 12월 운영위 회의에서 금요일 저녁 행사를 안건으로 다루겠습니다."},
+  {id:"gc3",postId:"g2",author:"201동 1104호",ts:T(26),body:"저도 찬성이에요. 평일 저녁이면 퇴근하고 갈 수 있어요."},
+  {id:"gc4",postId:"g3",author:"이웃정 운영위",staff:true,ts:T(60),body:"'1인 가구 반찬 나눔' 소모임이 새로 생겼어요. 소모임 메뉴에서 가입하실 수 있습니다."},
 ];
-const LIVE={mode:"local",posts:[],comments:[]};
+// 공유 데이터: 게시판(posts, comments) + 동 행사(events, roles, going) + 투표(votes) + 소모임(clubs, members) + 정 포인트(pts)
+const LIVE={mode:"init",posts:[],comments:[],events:[],roles:[],going:[],votes:[],clubs:[],members:[],pts:[]};
+const LOCAL_KEYS=["posts","comments","events","roles","going","votes","clubs","members","pts"];
+// 체험 모드(서버 미연결)일 때 쓰는 기본 데이터. 서버에는 같은 내용이 들어 있음
+const LOCAL_SEED={"events": [{"id": "2026-11-07", "date": "2026-11-07", "dong": "207동", "title": "207동 푸드트럭 데이", "place": "207동 앞 광장", "time_text": "17:00~20:00"}, {"id": "2026-11-14", "date": "2026-11-14", "dong": "102동", "title": "102동 이웃 한 상 (가을)", "place": "102동 옆 어린이 놀이터", "time_text": "16:00~19:00"}, {"id": "2026-11-21", "date": "2026-11-21", "dong": "105동", "title": "105동 야시장", "place": "105동 필로티", "time_text": "18:00~21:00"}, {"id": "2026-11-28", "date": "2026-11-28", "dong": "203동", "title": "203동 김장 나눔", "place": "203동 커뮤니티룸", "time_text": "10:00~14:00"}, {"id": "2026-12-05", "date": "2026-12-05", "dong": "102동", "title": "102동 이웃 한 상", "place": "102동 옆 어린이 놀이터", "time_text": "16:00~19:00"}, {"id": "2026-12-12", "date": "2026-12-12", "dong": "201동", "title": "201동 겨울 행사 (주제 투표 중)", "place": "201동 앞 광장", "time_text": "17:00~20:00"}, {"id": "2026-12-19", "date": "2026-12-19", "dong": "101동", "title": "101동 크리스마스 마켓", "place": "101동 필로티", "time_text": "16:00~20:00"}, {"id": "2026-12-26", "date": "2026-12-26", "dong": "207동", "title": "207동 송년 영화의 밤", "place": "207동 커뮤니티룸", "time_text": "18:30~21:00"}, {"id": "2027-01-09", "date": "2027-01-09", "dong": "102동", "title": "102동 새해 윷놀이 한마당", "place": "102동 옆 어린이 놀이터", "time_text": "14:00~17:00"}, {"id": "2027-01-16", "date": "2027-01-16", "dong": "106동", "title": "106동 떡국 나눔", "place": "106동 커뮤니티룸", "time_text": "11:00~14:00"}, {"id": "2027-01-23", "date": "2027-01-23", "dong": "105동", "title": "105동 겨울 야시장", "place": "105동 필로티", "time_text": "18:00~21:00"}], "roles": [{"id": "r0", "event_id": "2026-11-07", "sort": 1, "label": "떡볶이", "ho": "101호", "taken_key": "207동-101호", "proposed": false}, {"id": "r1", "event_id": "2026-11-07", "sort": 2, "label": "떡볶이", "ho": "102호", "taken_key": "207동-102호", "proposed": false}, {"id": "r2", "event_id": "2026-11-07", "sort": 3, "label": "회오리감자", "ho": "202호", "taken_key": "207동-202호", "proposed": false}, {"id": "r3", "event_id": "2026-11-07", "sort": 4, "label": "어묵꼬치", "ho": "305호", "taken_key": "207동-305호", "proposed": false}, {"id": "r4", "event_id": "2026-11-07", "sort": 5, "label": "붕어빵", "ho": "401호", "taken_key": "207동-401호", "proposed": false}, {"id": "r5", "event_id": "2026-11-07", "sort": 6, "label": "음료·식혜", "ho": "503호", "taken_key": "207동-503호", "proposed": false}, {"id": "r6", "event_id": "2026-11-14", "sort": 1, "label": "장터 · 수제 쿠키", "ho": "501호", "taken_key": "102동-501호", "proposed": false}, {"id": "r7", "event_id": "2026-11-14", "sort": 2, "label": "장터 · 아이 옷·장난감 나눔", "ho": "201호", "taken_key": "102동-201호", "proposed": false}, {"id": "r8", "event_id": "2026-11-14", "sort": 3, "label": "한 상 · 어묵탕", "ho": "302호", "taken_key": "102동-302호", "proposed": false}, {"id": "r9", "event_id": "2026-11-14", "sort": 4, "label": "오프닝 진행", "ho": "1101호", "taken_key": "102동-1101호", "proposed": false}, {"id": "r10", "event_id": "2026-11-14", "sort": 5, "label": "사진 기록", "ho": "903호", "taken_key": "102동-903호", "proposed": false}, {"id": "r11", "event_id": "2026-11-21", "sort": 1, "label": "호떡", "ho": "103호", "taken_key": "105동-103호", "proposed": false}, {"id": "r12", "event_id": "2026-11-21", "sort": 2, "label": "닭꼬치", "ho": "204호", "taken_key": "105동-204호", "proposed": false}, {"id": "r13", "event_id": "2026-11-21", "sort": 3, "label": "핸드메이드 액세서리", "ho": "601호", "taken_key": "105동-601호", "proposed": false}, {"id": "r14", "event_id": "2026-11-21", "sort": 4, "label": "조명·전구 설치", "ho": "802호", "taken_key": "105동-802호", "proposed": false}, {"id": "r15", "event_id": "2026-11-28", "sort": 1, "label": "절임배추 준비", "ho": "102호", "taken_key": "203동-102호", "proposed": false}, {"id": "r16", "event_id": "2026-11-28", "sort": 2, "label": "양념 만들기", "ho": "301호", "taken_key": "203동-301호", "proposed": false}, {"id": "r17", "event_id": "2026-11-28", "sort": 3, "label": "수육 삶기", "ho": null, "taken_key": null, "proposed": false}, {"id": "r18", "event_id": "2026-11-28", "sort": 4, "label": "포장·배달 (어르신 세대)", "ho": null, "taken_key": null, "proposed": false}, {"id": "r19", "event_id": "2026-12-05", "sort": 1, "label": "오프닝 진행", "ho": "501호", "taken_key": "102동-501호", "proposed": false}, {"id": "r20", "event_id": "2026-12-05", "sort": 2, "label": "장터 · 아이 옷·장난감 나눔", "ho": "201호", "taken_key": "102동-201호", "proposed": false}, {"id": "r21", "event_id": "2026-12-05", "sort": 3, "label": "한 상 · 따뜻한 어묵탕", "ho": "302호", "taken_key": "102동-302호", "proposed": false}, {"id": "r22", "event_id": "2026-12-05", "sort": 4, "label": "장터 · 수제 쿠키", "ho": "1101호", "taken_key": "102동-1101호", "proposed": false}, {"id": "r23", "event_id": "2026-12-05", "sort": 5, "label": "장터 · 음료 부스 (유자차·핫초코)", "ho": null, "taken_key": null, "proposed": false}, {"id": "r24", "event_id": "2026-12-05", "sort": 6, "label": "이웃 빙고 운영", "ho": null, "taken_key": null, "proposed": false}, {"id": "r25", "event_id": "2026-12-05", "sort": 7, "label": "층별 대항전 심판", "ho": null, "taken_key": null, "proposed": false}, {"id": "r26", "event_id": "2026-12-05", "sort": 8, "label": "사진 기록", "ho": null, "taken_key": null, "proposed": false}, {"id": "r27", "event_id": "2026-12-05", "sort": 9, "label": "마감 정리·분리수거", "ho": null, "taken_key": null, "proposed": false}, {"id": "r28", "event_id": "2026-12-12", "sort": 1, "label": "행사 총괄", "ho": null, "taken_key": null, "proposed": false}, {"id": "r29", "event_id": "2026-12-12", "sort": 2, "label": "장소 꾸미기", "ho": null, "taken_key": null, "proposed": false}, {"id": "r30", "event_id": "2026-12-12", "sort": 3, "label": "먹거리 준비", "ho": null, "taken_key": null, "proposed": false}, {"id": "r31", "event_id": "2026-12-19", "sort": 1, "label": "뱅쇼 부스", "ho": "204호", "taken_key": "101동-204호", "proposed": false}, {"id": "r32", "event_id": "2026-12-19", "sort": 2, "label": "쿠키 굽기", "ho": "702호", "taken_key": "101동-702호", "proposed": false}, {"id": "r33", "event_id": "2026-12-19", "sort": 3, "label": "트리 꾸미기", "ho": null, "taken_key": null, "proposed": false}, {"id": "r34", "event_id": "2026-12-19", "sort": 4, "label": "캐럴 공연", "ho": null, "taken_key": null, "proposed": false}, {"id": "r35", "event_id": "2026-12-26", "sort": 1, "label": "영화 상영 준비", "ho": "404호", "taken_key": "207동-404호", "proposed": false}, {"id": "r36", "event_id": "2026-12-26", "sort": 2, "label": "간식 준비", "ho": null, "taken_key": null, "proposed": false}, {"id": "r37", "event_id": "2026-12-26", "sort": 3, "label": "좌석 정리", "ho": null, "taken_key": null, "proposed": false}, {"id": "r38", "event_id": "2027-01-09", "sort": 1, "label": "윷놀이 진행", "ho": "1101호", "taken_key": "102동-1101호", "proposed": false}, {"id": "r39", "event_id": "2027-01-09", "sort": 2, "label": "떡국 끓이기", "ho": null, "taken_key": null, "proposed": false}, {"id": "r40", "event_id": "2027-01-09", "sort": 3, "label": "층별 팀 구성", "ho": null, "taken_key": null, "proposed": false}, {"id": "r41", "event_id": "2027-01-09", "sort": 4, "label": "상품 준비", "ho": null, "taken_key": null, "proposed": false}, {"id": "r42", "event_id": "2027-01-09", "sort": 5, "label": "사진 기록", "ho": null, "taken_key": null, "proposed": false}, {"id": "r43", "event_id": "2027-01-16", "sort": 1, "label": "떡국 끓이기", "ho": "301호", "taken_key": "106동-301호", "proposed": false}, {"id": "r44", "event_id": "2027-01-16", "sort": 2, "label": "배달 (어르신 세대)", "ho": null, "taken_key": null, "proposed": false}, {"id": "r45", "event_id": "2027-01-23", "sort": 1, "label": "호떡", "ho": "103호", "taken_key": "105동-103호", "proposed": false}, {"id": "r46", "event_id": "2027-01-23", "sort": 2, "label": "어묵꼬치", "ho": null, "taken_key": null, "proposed": false}, {"id": "r47", "event_id": "2027-01-23", "sort": 3, "label": "핫팩 나눔", "ho": null, "taken_key": null, "proposed": false}], "going": [{"event_id": "2026-12-05", "user_key": "105동-1203호"}, {"event_id": "2026-12-05", "user_key": "201동-302호"}, {"event_id": "2026-12-05", "user_key": "106동-1502호"}, {"event_id": "2026-12-05", "user_key": "207동-404호"}, {"event_id": "2026-12-19", "user_key": "102동-1101호"}, {"event_id": "2026-12-19", "user_key": "105동-301호"}, {"event_id": "2027-01-09", "user_key": "203동-502호"}], "votes": [], "clubs": [{"id": "c1", "name": "더힐 새벽 러닝", "when_text": "화·목 06:30", "place": "단지 둘레길 3km", "tag": "운동", "max_members": 20, "base_members": 12, "sort": 0}, {"id": "c2", "name": "한 달 한 권 독서 모임", "when_text": "매월 마지막 금 20:00", "place": "커뮤니티룸", "tag": "취미", "max_members": 10, "base_members": 8, "sort": 1}, {"id": "c3", "name": "금요 보드게임", "when_text": "격주 금 19:30", "place": "102동 작은도서관", "tag": "취미", "max_members": 12, "base_members": 6, "sort": 2}, {"id": "c4", "name": "공동육아 놀이터 모임", "when_text": "토 10:00", "place": "102동 옆 놀이터", "tag": "육아", "max_members": 25, "base_members": 15, "sort": 3}, {"id": "c5", "name": "반려견 산책 메이트", "when_text": "매일 21:00", "place": "정문 앞 집결", "tag": "반려동물", "max_members": 15, "base_members": 9, "sort": 4}, {"id": "c6", "name": "1인 가구 반찬 나눔", "when_text": "격주 일 17:00", "place": "커뮤니티룸", "tag": "청년", "max_members": 12, "base_members": 7, "sort": 5}], "members": [], "pts": [{"id": "p0", "user_key": "102동-101호", "dong": "102동", "reason": "207동 푸드트럭 데이 손님 참여", "points": 10, "created_at": "2026-11-07T12:00:00+09:00"}, {"id": "p1", "user_key": "102동-101호", "dong": "102동", "reason": "102동 이웃 한 상 (가을) 역할 신청", "points": 30, "created_at": "2026-11-14T12:00:00+09:00"}, {"id": "p2", "user_key": "102동-101호", "dong": "102동", "reason": "나눔 게시판 글 등록", "points": 20, "created_at": "2026-11-02T12:00:00+09:00"}, {"id": "p3", "user_key": "102동-101호", "dong": "102동", "reason": "행사 후기 작성", "points": 10, "created_at": "2026-10-24T12:00:00+09:00"}, {"id": "p4", "user_key": "102동-102호", "dong": "102동", "reason": "207동 푸드트럭 데이 손님 참여", "points": 10, "created_at": "2026-11-07T12:00:00+09:00"}, {"id": "p5", "user_key": "102동-102호", "dong": "102동", "reason": "나눔 게시판 글 등록", "points": 20, "created_at": "2026-11-02T12:00:00+09:00"}, {"id": "p6", "user_key": "102동-102호", "dong": "102동", "reason": "행사 후기 작성", "points": 10, "created_at": "2026-10-24T12:00:00+09:00"}, {"id": "p7", "user_key": "102동-102호", "dong": "102동", "reason": "새 이웃 환영 인사", "points": 5, "created_at": "2026-10-12T12:00:00+09:00"}, {"id": "p8", "user_key": "102동-202호", "dong": "102동", "reason": "105동 야시장 손님 참여", "points": 10, "created_at": "2026-11-21T12:00:00+09:00"}, {"id": "p9", "user_key": "102동-202호", "dong": "102동", "reason": "더힐 새벽 러닝 가입", "points": 15, "created_at": "2026-11-03T12:00:00+09:00"}, {"id": "p10", "user_key": "102동-303호", "dong": "102동", "reason": "이웃 빙고 완성", "points": 50, "created_at": "2026-11-14T12:00:00+09:00"}, {"id": "p11", "user_key": "102동-404호", "dong": "102동", "reason": "102동 이웃 한 상 (가을) 역할 신청", "points": 30, "created_at": "2026-11-14T12:00:00+09:00"}, {"id": "p12", "user_key": "102동-404호", "dong": "102동", "reason": "품앗이 게시판 글 등록", "points": 20, "created_at": "2026-11-09T12:00:00+09:00"}]};
 const myKey=()=>S.user?`${S.user.dong}-${S.user.ho}`:"";
 function allPosts(board){return [...LIVE.posts,...SEED_POSTS].filter(p=>p.board===board).sort((a,b)=>b.ts-a.ts)}
 function findPost(id){return LIVE.posts.find(p=>p.id===id)||SEED_POSTS.find(p=>p.id===id)}
@@ -484,11 +540,12 @@ const DB={
       }
     }
     if(LIVE.mode!=="error")LIVE.mode="local";
-    try{const s=JSON.parse(localStorage.getItem("cth-live")||"null");if(s){LIVE.posts=s.posts||[];LIVE.comments=s.comments||[]}}catch(e){}
-    try{this.bc=new BroadcastChannel("cth-live");this.bc.onmessage=e=>{
+    Object.assign(LIVE,JSON.parse(JSON.stringify(LOCAL_SEED)));
+    try{const s=JSON.parse(localStorage.getItem("cth-live2")||"null");if(s)LOCAL_KEYS.forEach(k=>{if(Array.isArray(s[k]))LIVE[k]=s[k]})}catch(e){}
+    try{this.bc=new BroadcastChannel("cth-live2");this.bc.onmessage=e=>{
       if(LIVE.mode==="live")return;
-      const before=LIVE.posts.length+LIVE.comments.length;LIVE.posts=e.data.posts;LIVE.comments=e.data.comments;
-      if(LIVE.posts.length+LIVE.comments.length>before)toast("새 글이나 댓글이 올라왔어요.");refreshLive()}}catch(e){}
+      const before=LIVE.posts.length+LIVE.comments.length;LOCAL_KEYS.forEach(k=>{if(Array.isArray(e.data[k]))LIVE[k]=e.data[k]});
+      if(LIVE.posts.length+LIVE.comments.length>before)toast("새 글이나 댓글이 올라왔어요.");updateTop();refreshLive()}}catch(e){}
   },
   async retry(){
     try{await this.loadAll();LIVE.mode="live";LIVE.err="";this.listen();toast("서버에 연결되었습니다.");refreshLive()}
@@ -502,6 +559,12 @@ const DB={
       .on("postgres_changes",{event:"INSERT",schema:"public",table:"comments"},pl=>this.incoming("comments",this.mapComment(pl.new)))
       .on("postgres_changes",{event:"DELETE",schema:"public",table:"posts"},pl=>pl.old&&pl.old.id&&this.removed("posts",pl.old.id))
       .on("postgres_changes",{event:"DELETE",schema:"public",table:"comments"},pl=>pl.old&&pl.old.id&&this.removed("comments",pl.old.id))
+      .on("postgres_changes",{event:"*",schema:"public",table:"event_roles"},()=>this.reload("event_roles"))
+      .on("postgres_changes",{event:"*",schema:"public",table:"event_going"},()=>this.reload("event_going"))
+      .on("postgres_changes",{event:"*",schema:"public",table:"poll_votes"},()=>this.reload("poll_votes"))
+      .on("postgres_changes",{event:"*",schema:"public",table:"clubs"},()=>this.reload("clubs"))
+      .on("postgres_changes",{event:"*",schema:"public",table:"club_members"},()=>this.reload("club_members"))
+      .on("postgres_changes",{event:"INSERT",schema:"public",table:"point_log"},()=>this.reload("point_log"))
       .subscribe((st,err)=>{
         if(st==="SUBSCRIBED"){LIVE.rt="ok";this.stopPoll();this.loadAll().then(refreshLive).catch(()=>{})}
         else if(st==="CHANNEL_ERROR"||st==="TIMED_OUT"||st==="CLOSED"){console.warn("Realtime",st,err);LIVE.rt="fail";this.startPoll();refreshLive()}
@@ -516,7 +579,8 @@ const DB={
       try{await this.loadAll()}catch(e){return}
       const now=[...LIVE.posts,...LIVE.comments];
       const fresh=now.filter(x=>!before.has(x.id)&&x.authorKey!==myKey());
-      if(now.length!==before.size&&!fresh.length){if(S.postView&&!findPost(S.postView))S.postView=null;refreshLive()}
+      if(S.postView&&!findPost(S.postView))S.postView=null;
+      updateTop();if(!fresh.length)refreshLive();
       if(fresh.length&&S.user)toast(fresh[0].title?`새 글이 올라왔어요: ${fresh[0].title}`:"새 댓글이 달렸어요.");
       if(fresh.length)refreshLive();
     },5000);
@@ -530,6 +594,7 @@ const DB={
       this.sb.from("comments").select("*").order("created_at",{ascending:true}).limit(2000)]);
     if(p.error)throw p.error;if(c.error)throw c.error;
     LIVE.posts=p.data.map(r=>this.mapPost(r));LIVE.comments=c.data.map(r=>this.mapComment(r));
+    await this.loadShared();updateTop();
   },
   incoming(kind,item){
     const arr=kind==="posts"?LIVE.posts:LIVE.comments;
@@ -538,7 +603,31 @@ const DB={
     if(S.user&&item.authorKey!==myKey())toast(kind==="posts"?`새 글이 올라왔어요: ${item.title}`:`새 댓글: ${String(item.body).slice(0,20)}`);
     refreshLive();
   },
-  saveLocal(){const d={posts:LIVE.posts,comments:LIVE.comments};try{localStorage.setItem("cth-live",JSON.stringify(d))}catch(e){}try{this.bc&&this.bc.postMessage(d)}catch(e){}},
+  saveLocal(){const d={};LOCAL_KEYS.forEach(k=>d[k]=LIVE[k]);try{localStorage.setItem("cth-live2",JSON.stringify(d))}catch(e){}try{this.bc&&this.bc.postMessage(d)}catch(e){}},
+  /* 동 행사·투표·소모임·포인트: 서버 테이블 ↔ 화면 데이터 */
+  SHARED:[["events","events"],["event_roles","roles"],["event_going","going"],["poll_votes","votes"],["clubs","clubs"],["club_members","members"],["point_log","pts"]],
+  async loadShared(){
+    const res=await Promise.all(this.SHARED.map(([t])=>this.sb.from(t).select("*").limit(5000)));
+    res.forEach((r,i)=>{if(r.error)throw r.error});
+    res.forEach((r,i)=>{LIVE[this.SHARED[i][1]]=r.data});
+  },
+  reload(table){
+    this._rt=this._rt||{};clearTimeout(this._rt[table]);
+    this._rt[table]=setTimeout(async()=>{
+      const key=(this.SHARED.find(x=>x[0]===table)||[])[1];if(!key)return;
+      const r=await this.sb.from(table).select("*").limit(5000);
+      if(!r.error){LIVE[key]=r.data;updateTop();refreshLive()}
+    },250);
+  },
+  /* 역할 신청, 참여 신청, 투표, 소모임, 포인트: 서버 함수(RPC) 호출. 체험 모드면 같은 규칙으로 브라우저 안에서 처리 */
+  async rpc(name,args){
+    if(LIVE.mode==="live"){
+      const {data,error}=await this.sb.rpc(name,args);if(error)throw error;
+      try{await this.loadShared()}catch(e){}
+      updateTop();refreshLive();return data;
+    }
+    const r=LOCAL_RPC[name](args);this.saveLocal();updateTop();refreshLive();return r;
+  },
   async addPost(p){
     p={...p,authorKey:myKey()};
     if(LIVE.mode==="live"){
@@ -566,6 +655,32 @@ const DB={
     }else{LIVE.comments.push({...c,id:"c"+Date.now(),ts:Date.now()});this.saveLocal();refreshLive()}
   },
 };
+/* 체험 모드용: 서버 함수와 같은 규칙 */
+function lp(k,dong,reason,points){LIVE.pts.push({id:"lp"+Date.now()+Math.random().toString(36).slice(2),user_key:k,dong,reason:reason.slice(0,60),points,created_at:new Date().toISOString()})}
+const LOCAL_RPC={
+  take_role({p_role,p_key}){const r=LIVE.roles.find(x=>x.id===p_role);if(!r)return "not_found";const e=evById(r.event_id);
+    if(isPast(e))return "closed";if(p_key.split("-")[0]!==e.dong)return "wrong_dong";if(r.ho)return "taken";
+    if(rolesOf(e.id).some(x=>x.taken_key===p_key))return "already";r.ho=p_key.split("-")[1];r.taken_key=p_key;lp(p_key,e.dong,e.title+" 역할 신청",30);return "ok"},
+  cancel_role({p_role,p_key}){const r=LIVE.roles.find(x=>x.id===p_role);if(!r||r.taken_key!==p_key)return "not_mine";const e=evById(r.event_id);if(isPast(e))return "closed";
+    if(r.proposed)LIVE.roles=LIVE.roles.filter(x=>x!==r);else{r.ho=null;r.taken_key=null}lp(p_key,e.dong,e.title+" 역할 취소",-30);return "ok"},
+  propose_role({p_event,p_key,p_label}){const e=evById(p_event);const l=String(p_label||"").trim();if(!l||l.length>40)return "bad_label";if(!e)return "not_found";
+    if(isPast(e))return "closed";if(p_key.split("-")[0]!==e.dong)return "wrong_dong";if(rolesOf(e.id).some(x=>x.taken_key===p_key))return "already";
+    LIVE.roles.push({id:"lr"+Date.now(),event_id:e.id,sort:Math.max(0,...rolesOf(e.id).map(x=>x.sort))+1,label:l,ho:p_key.split("-")[1],taken_key:p_key,proposed:true});lp(p_key,e.dong,e.title+" 새 역할 제안",30);return "ok"},
+  toggle_going({p_event,p_key}){const e=evById(p_event);if(!e)return "not_found";if(isPast(e))return "closed";const d=p_key.split("-")[0];if(d===e.dong)return "own_dong";
+    const i=LIVE.going.findIndex(g=>g.event_id===p_event&&g.user_key===p_key);
+    if(i>=0){LIVE.going.splice(i,1);lp(p_key,d,e.title+" 참여 취소",-10);return "left"}
+    LIVE.going.push({event_id:p_event,user_key:p_key});lp(p_key,d,e.title+" 손님 참여",10);return "joined"},
+  cast_vote({p_poll,p_key,p_option}){const v=LIVE.votes.find(x=>x.poll_id===p_poll&&x.user_key===p_key);if(v)v.option=p_option;else LIVE.votes.push({poll_id:p_poll,user_key:p_key,option:p_option});return "ok"},
+  toggle_club({p_club,p_key}){const c=LIVE.clubs.find(x=>x.id===p_club);if(!c)return "not_found";const d=p_key.split("-")[0];
+    const i=LIVE.members.findIndex(m=>m.club_id===p_club&&m.user_key===p_key);
+    if(i>=0){LIVE.members.splice(i,1);lp(p_key,d,c.name+" 탈퇴",-15);return "left"}
+    if(clubCount(c)>=c.max_members)return "full";LIVE.members.push({club_id:p_club,user_key:p_key});lp(p_key,d,c.name+" 가입",15);return "joined"},
+  create_club({p_key,p_name,p_when,p_place}){const n=String(p_name||"").trim();if(!n||n.length>30)return "bad_name";
+    if(LIVE.clubs.filter(c=>c.created_by===p_key).length>=3)return "too_many";const id="lc"+Date.now();
+    LIVE.clubs.push({id,name:n,when_text:(p_when||"").trim()||"조율 중",place:(p_place||"").trim()||"조율 중",tag:"신규",max_members:10,base_members:0,sort:100,created_by:p_key,created_at:new Date().toISOString()});
+    LIVE.members.push({club_id:id,user_key:p_key});lp(p_key,p_key.split("-")[0],n+" 소모임 개설",15);return "ok"},
+  add_points({p_key,p_reason,p_points}){if(![5,10,20,50].includes(p_points))return "bad_points";lp(p_key,p_key.split("-")[0],p_reason||"활동",p_points);return "ok"},
+};
 function errText(e){
   const m=String((e&&(e.message||e.details||e.hint))||e||"");
   if(/delete_suggestion|Could not find the function/i.test(m))return "삭제 기능용 SQL이 아직 실행되지 않았어요. Supabase에서 실행해 주세요.";
@@ -580,11 +695,12 @@ function liveBadge(){
     :LIVE.rt==="fail"?'<span class="live on">● 서버 연결됨 (5초마다 새 글 확인)</span>'
     :'<span class="live on">● 서버 연결됨</span>';
   if(LIVE.mode==="error")return `<span class="live err">● 서버 연결 실패: ${esc(LIVE.err||"원인 불명")} (10초마다 다시 시도 중)</span>`;
+  if(LIVE.mode==="init")return '<span class="live">● 서버에 연결하는 중…</span>';
   return '<span class="live">● 체험 모드: 이 브라우저에만 저장돼요</span>';
 }
 /* 실시간 갱신: 쓰던 글은 지우지 않고 화면만 새로 그림 */
 function refreshLive(){
-  if(!S.user||!["home","share","suggest"].includes(S.view))return;
+  if(!S.user)return;
   if($("#modal").classList.contains("on"))return;
   const keep={};document.querySelectorAll("#view textarea[id],#view input[id]").forEach(el=>keep[el.id]=el.value);
   const fid=document.activeElement&&document.activeElement.id,y=window.scrollY;
@@ -636,22 +752,42 @@ const IC={
 };
 
 /* ---------- 메인 ---------- */
+function loadingBox(){return `<div class="intro"><b>정보를 불러오는 중이에요…</b><p class="desc">${LIVE.mode==="error"?esc(LIVE.err||""):"잠시만 기다려 주세요."}</p></div>`}
+function notices(){
+  const up=nextEvents()[0],past=evs().filter(isPast).slice(-1)[0];
+  return [
+    {c:"공지",t:"102동 엘리베이터 정기 점검 안내 (이번 주 목요일 10:00~12:00)",ts:hoursAgo(3),v:84,w:"관리사무소",b:"이번 주 목요일 오전 10시부터 12시까지 102동 1·2호기 엘리베이터 정기 점검이 있습니다. 점검 시간에는 계단을 이용해 주시기 바랍니다."},
+    up&&{c:"행사",t:`[${up.dong}] ${evDay(up)} ${up.title} 역할 모집`,ts:hoursAgo(26),v:152,w:"이웃정 운영위",b:`${evLabel(up)}, ${up.place}에서 '${up.title}' 행사가 열립니다. ${up.dong} 주민은 동 행사 > 이달의 행사 메뉴에서 비어 있는 역할을 신청해 주시고, 다른 동 이웃은 손님으로 참여 신청해 주세요.`},
+    past&&{c:"행사",t:`${past.title} 후기 사진 게시`,ts:hoursAgo(50),v:97,w:"이웃정 운영위",b:`지난 ${evDay(past)} '${past.title}'에 참여해 주신 모든 이웃께 감사드립니다. 동 행사 > 행사 후기에서 사진과 후기를 확인하세요.`},
+    {c:"공지",t:"겨울철 수도 동파 예방 안내",ts:hoursAgo(98),v:63,w:"관리사무소",b:"기온이 영하로 내려가는 날에는 수도꼭지를 조금 열어 두시고, 계량기함 보온재 상태를 확인해 주세요."},
+    {c:"투표",t:"201동 겨울 행사 주제 투표 진행 (~12/5)",ts:hoursAgo(146),v:121,w:"이웃정 운영위",b:"12월 12일 201동 겨울 행사의 주제를 정하는 투표가 진행 중입니다. 동 행사 > 다음 행사 투표 메뉴에서 참여해 주세요. 다른 동 주민도 투표할 수 있습니다."},
+    {c:"공지",t:"재활용 분리배출 요일 변경 (매주 화·금)",ts:hoursAgo(240),v:205,w:"관리사무소",b:"이번 달부터 재활용 분리배출 요일이 매주 화요일과 금요일로 변경됩니다."},
+    {c:"공지",t:"커뮤니티룸 예약 방법 변경 안내",ts:hoursAgo(340),v:77,w:"관리사무소",b:"커뮤니티룸 예약은 이제 관리사무소 방문 없이 소모임 메뉴에서 신청할 수 있습니다."},
+  ].filter(Boolean).map((n,i)=>({...n,d:dotDate(n.ts),v:n.v+(S.noticeViews[i]||0)}));
+}
+function monthGrid(ym,cellFn){
+  const [y,m]=ym.split("-").map(Number),first=new Date(y,m-1,1).getDay(),days=new Date(y,m,0).getDate();
+  let html="",d=1-first;
+  while(d<=days){html+="<tr>";for(let i=0;i<7;i++,d++)html+=(d<1||d>days)?"<td></td>":cellFn(`${y}-${pad(m)}-${pad(d)}`,d,i);html+="</tr>"}
+  return html;
+}
 function HOME(){
+  const NS=notices();
   const asRow=b=>allPosts(b).map(p=>({c:p.cat,t:p.title,d:fmt(p.ts),fresh:isNew(p.ts),open:`${b}:${p.id}`}));
-  const tabs=[["공지사항",S.notices.filter(n=>n.c==="공지").map(n=>({...n,open:"n:"+S.notices.indexOf(n)}))],["단지소식",S.notices.filter(n=>n.c!=="공지").map(n=>({...n,open:"n:"+S.notices.indexOf(n)}))],["나눔·품앗이",asRow("share")],["건의함",asRow("suggest")]];
+  const tabs=[["공지사항",NS.map((n,i)=>({...n,open:"n:"+i})).filter(n=>n.c==="공지")],["단지소식",NS.map((n,i)=>({...n,open:"n:"+i})).filter(n=>n.c!=="공지")],["나눔·품앗이",asRow("share")],["건의함",asRow("suggest")]];
   const [,items]=tabs[S.homeTab];
-  const evs=Object.values(S.events).sort((a,b)=>a.date-b.date);
-  const ev=S.events.e2,open=ev.roles.filter(r=>!r[0]).length;
-  let cal="";const evd={};evs.forEach(e=>evd[e.date]=e);
-  for(let w=0;w<5;w++){cal+="<tr>";for(let i=0;i<7;i++){const d=w*7+i+1;if(d>30){cal+="<td></td>";continue}
-    cal+=`<td class="${evd[d]?"ev":d===11?"today":""} ${i===0?"sun":i===6?"sat":""}">${evd[d]?`<b title="${evd[d].title}">${d}</b>`:d===11?`<b>${d}</b>`:d}</td>`}cal+="</tr>"}
+  const ready=LIVE.events.length>0,ev=ready&&myDongNext(),ym=TODAY().slice(0,7),[cy,cm]=ym.split("-").map(Number);
+  const open=ev?rolesOf(ev.id).filter(r=>!r.ho).length:0;
+  const evd={};evs().forEach(e=>evd[e.date]=e);
+  const cal=monthGrid(ym,(ds,d,i)=>`<td class="${evd[ds]?"ev":ds===TODAY()?"today":""} ${i===0?"sun":i===6?"sat":""}">${evd[ds]?`<b title="${esc(evd[ds].title)}">${d}</b>`:ds===TODAY()?`<b>${d}</b>`:d}</td>`);
+  const upList=nextEvents().slice(0,4);
   const gal=[["207동 푸드트럭 데이","2026.11.07","10% 70%"],["101동 가을 야시장","2026.10.24","60% 60%"],["203동 단지 텃밭 수확","2026.10.11","90% 80%"],["105동 여름밤 영화 상영","2026.08.22","35% 35%"]];
   return `
   <section class="mv"><div class="wrap">
     <small>CHUNGNAM THE HILL · 정(情)의 재분배</small>
     <h2>얼굴만 알던 이웃이<br>이름을 아는 이웃이 되는 곳</h2>
     <p>매주 토요일, 한 동씩 돌아가며 이웃이 함께 준비하는 행사로 충남더힐을 채워 갑니다.</p>
-    <div class="dots"><i></i><i></i><i></i></div>
+    <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap"><button class="btn" data-nav="about">이웃정 기능 둘러보기</button></div>
   </div></section>
   <div class="wrap quick"><ul>
     <li><button data-nav="events" data-sub="month">${IC.cal}이달의 행사</button></li>
@@ -664,23 +800,23 @@ function HOME(){
   <section class="wrap main-sec"><div class="cols">
     <div>
       <div class="box-h"><div class="btabs">${tabs.map((t,i)=>`<button data-htab="${i}" class="${S.homeTab===i?"on":""}">${t[0]}</button>`).join("")}</div><button class="more" aria-label="더보기" data-nav="${["news","news","share","suggest"][S.homeTab]}">+</button></div>
-      <ul class="nlist">${items.slice(0,6).map(n=>`<li><span><span class="cat ${catCls(n.c)}">${n.c}</span><button data-open="${n.open}">${esc(n.t)}</button>${n.fresh||n.d==="2026.11.11"?'<span class="new">N</span>':""}</span><span class="dt num">${n.d}</span></li>`).join("")}</ul>
+      <ul class="nlist">${items.slice(0,6).map(n=>`<li><span><span class="cat ${catCls(n.c)}">${n.c}</span><button data-open="${n.open}">${esc(n.t)}</button>${n.fresh||(n.ts&&isNew(n.ts))?'<span class="new">N</span>':""}</span><span class="dt num">${n.d}</span></li>`).join("")}</ul>
     </div>
     <div>
-      <div class="box-h"><h3>이번 주 우리 동 행사</h3><button class="more" aria-label="더보기" data-nav="events">+</button></div>
-      <div class="evcard">
-        <div class="ph"><span>역할 ${open}개 모집 중</span></div>
+      <div class="box-h"><h3>${ev&&ev.dong===S.user.dong?"다가오는 우리 동 행사":"다가오는 행사"}</h3><button class="more" aria-label="더보기" data-nav="events">+</button></div>
+      ${ev?`<div class="evcard">
+        <div class="ph"><span>${dday(ev)} · ${open?`역할 ${open}개 모집 중`:"준비 완료"}</span></div>
         <div class="bd">
-          <h4>${ev.title}</h4>
-          <dl><dt>일시</dt><dd>${ev.time}</dd><dt>장소</dt><dd>${ev.place}</dd><dt>내용</dt><dd>장터 · 층별 대항전 · 다 함께 식사</dd></dl>
-          <button class="btn sm" data-nav="events" data-sub="month" style="justify-self:start;margin-top:4px">역할 신청하기</button>
+          <h4>${esc(ev.title)}</h4>
+          <dl><dt>일시</dt><dd>${evLabel(ev)}</dd><dt>장소</dt><dd>${esc(ev.place)}</dd><dt>준비</dt><dd>역할 ${rolesOf(ev.id).length-open}/${rolesOf(ev.id).length} 확정 · 손님 ${goingOf(ev.id).length}세대 참여 예정</dd></dl>
+          <button class="btn sm" data-goev="${ev.id}" style="justify-self:start;margin-top:4px">${ev.dong===S.user.dong?"역할 신청하기":"자세히 보기"}</button>
         </div>
-      </div>
+      </div>`:loadingBox()}
     </div>
     <div>
-      <div class="box-h"><h3>11월 행사 일정</h3><button class="more" aria-label="더보기" data-nav="events" data-sub="month">+</button></div>
+      <div class="box-h"><h3>${cm}월 행사 일정</h3><button class="more" aria-label="더보기" data-nav="events" data-sub="month">+</button></div>
       <table class="mcal"><thead><tr><th class="sun">일</th><th>월</th><th>화</th><th>수</th><th>목</th><th>금</th><th class="sat">토</th></tr></thead><tbody>${cal}</tbody></table>
-      <ul class="mcal-list">${evs.map(e=>`<li><b class="num">11.${String(e.date).padStart(2,"0")}</b><span>${e.title}</span></li>`).join("")}</ul>
+      <ul class="mcal-list">${upList.map(e=>`<li><b class="num">${e.date.slice(5).replace("-",".")}</b><span>${esc(e.title)}</span></li>`).join("")||"<li>예정된 행사가 없습니다.</li>"}</ul>
     </div>
   </div></section>
   <section class="gal-sec"><div class="wrap">
@@ -689,9 +825,9 @@ function HOME(){
   </div></section>
   <section class="wrap banners">
     <button data-nav="news" data-sub="newcomer"><b>새 이웃 소개</b><span>102동 903호에 새 가족이 왔어요</span></button>
-    <button data-nav="points" data-sub="rank"><b>이달의 1위 동 상금 50만 원</b><span>102동 현재 ${rankOf("102동")}위</span></button>
+    <button data-nav="points" data-sub="rank"><b>이달의 1위 동 상금 50만 원</b><span>${S.user.dong} 현재 ${rankOf(S.user.dong)}위</span></button>
     <button data-nav="clubs"><b>소모임 가입</b><span>러닝 · 독서 · 육아 · 반찬 나눔</span></button>
-    <button data-nav="news" data-sub="notice"><b>관리사무소</b><span>TEL 031-000-1234 (평일 09~18시)</span></button>
+    <button data-nav="about"><b>이웃정 소개</b><span>기능 10가지 한눈에 보기</span></button>
   </section>`;
 }
 
@@ -717,88 +853,132 @@ function boardList(rows,head,cols){
 }
 
 const PAGES={
+about:{
+  features(){
+    const F=[
+      ["로그인 · 세대 인증","동·호수와 비밀번호로 들어오는 주민 전용 공간이에요. 실제 거주 세대만 쓸 수 있다는 가정이에요.",null,"",""],
+      ["단지소식","관리사무소 공지와 단지 소식, 새로 이사 온 이웃 소개를 볼 수 있어요.",null,"news","notice"],
+      ["동 행사 달력 · 역할 신청","매주 토요일 한 동씩 행사를 열어요. 우리 동 행사는 빈 역할을 골라 맡고, 다른 이웃이 맡으면 내 화면에도 바로 보여요.",1,"events","month"],
+      ["손님 참여 신청","다른 동 행사에는 손님으로 참여 신청해요. 참여 예정 세대 수가 실시간으로 바뀌어요.",1,"events","month"],
+      ["행사 진행 안내 · 이웃 빙고","행사 당일 진행 순서와, 처음 만난 이웃과 말을 트게 돕는 빙고판이에요.",null,"events","program"],
+      ["다음 행사 투표","다음 행사 주제를 주민 투표로 정해요. 한 세대 한 표, 결과가 바로 반영돼요.",1,"events","vote"],
+      ["나눔 · 품앗이 게시판","남는 물건 나눔, 도움 부탁, 공동구매 글과 댓글이 새로고침 없이 올라와요.",1,"share",""],
+      ["건의함","시설·행사·커뮤니티 의견을 남기고 관리사무소 답변을 받아요. 익명 작성, 본인 글 삭제가 가능해요.",1,"suggest",""],
+      ["소모임","러닝, 독서, 육아, 1인 가구 반찬 나눔 같은 모임에 가입하고 새 모임을 만들 수 있어요.",1,"clubs",""],
+      ["정(情) 포인트 · 동별 순위","이웃 활동마다 포인트가 쌓이고 동별 순위가 매겨져요. 매달 1위 동에는 상금 50만 원!",1,"points","rank"],
+      ["마이페이지","내가 맡은 역할, 참여 예정 행사, 가입한 소모임을 모아 보고 공개 범위와 큰 글씨 모드를 설정해요.",null,"my","act"],
+    ];
+    return `<div class="intro"><b>충남더힐 이웃정은 이런 사이트예요</b><p class="desc">같은 아파트에 살아도 서로를 모르는 문제를 풀기 위해, 이웃이 함께 준비하는 '동 행사'를 중심으로 만든 주민 전용 커뮤니티입니다. <span class="live on" style="margin:0">● 실시간</span> 표시가 있는 기능은 여러 사람이 동시에 써도 서로의 화면에 바로 반영돼요.</p></div>
+    <ol class="feat">${F.map((f,i)=>`<li><span class="no num">${pad(i+1)}</span><div><b>${f[0]}${f[2]?' <span class="live on" style="margin-left:4px">● 실시간</span>':""}</b><p>${f[1]}</p></div>${f[3]?`<button class="btn line sm" data-nav="${f[3]}" ${f[4]?`data-sub="${f[4]}"`:""}>바로가기</button>`:"<span></span>"}</li>`).join("")}</ol>`;
+  },
+  demo(){
+    return `<div class="sect"><h4>시연 계정</h4>
+      ${boardList(ACCOUNTS,[["동","90px"],["호수","90px"],["비밀번호","110px"],["지금 정 포인트"]],a=>{const k=`${a.dong}동-${a.ho}호`;const p=LIVE.pts.filter(x=>x.user_key===k).reduce((s,x)=>s+x.points,0);return `<tr class="${k===myKey()?"mine":""}"><td>${a.dong}동</td><td>${a.ho}호</td><td class="num">${a.pw}</td><td class="num">${p}정${k===myKey()?" (지금 로그인)":""}</td></tr>`})}</div>
+    <div class="sect"><h4>두 사람이 함께 시연하기</h4>
+      ${boardList([["1","발표자는 노트북에서 102동 303호, 조원은 휴대폰에서 102동 404호로 로그인해요.",""],["2","303호가 동 행사 › 이달의 행사에서 빈 역할을 '신청'하면, 404호 화면에도 '303호 확정'이 바로 떠요.","events|month"],["3","404호가 건의함에 글을 쓰면 303호 화면에 알림과 함께 새 글이 올라와요.","suggest|"],["4","두 사람이 다음 행사 투표에 참여하면 득표수가 양쪽 화면에서 함께 바뀌어요.","events|vote"],["5","정 포인트 › 동별 순위에서 102동 점수가 활동에 따라 올라가는 걸 보여 줘요.","points|rank"]],
+        [["순서","70px"],["장면"],["바로가기","110px"]],r=>`<tr><td class="num"><b style="color:var(--blue)">${r[0]}</b></td><td class="l">${r[1]}</td><td>${r[2]?`<button class="btn line sm" data-nav="${r[2].split("|")[0]}" ${r[2].split("|")[1]?`data-sub="${r[2].split("|")[1]}"`:""}>열기</button>`:"-"}</td></tr>`)}</div>
+    <p class="desc">${liveBadge()}</p>`;
+  },
+},
 news:{
   notice(){
-    if(S.noticeView!==null){const n=S.notices[S.noticeView];return `<div class="view"><div class="vh"><h5>[${n.c}] ${esc(n.t)}</h5><p>작성자 ${n.w} · 등록일 ${n.d} · 조회 ${n.v}</p></div><div class="vb">${esc(n.b)}</div></div><div class="btns"><button class="btn line" id="backN">목록</button></div>`}
-    return `<div class="bbar"><p class="tot">전체 <b>${S.notices.length}</b>건</p><div class="srch"><select aria-label="검색 조건"><option>제목</option><option>내용</option></select><input aria-label="검색어" placeholder="검색어 입력"><button class="btn sm">검색</button></div></div>
-    ${boardList(S.notices,[["번호","70px"],["분류","80px"],["제목"],["작성자","120px"],["등록일","110px"],["조회","70px"]],(n,i)=>`<tr><td class="num">${S.notices.length-i}</td><td><span class="cat ${n.c==="행사"?"o":n.c==="투표"?"g":""}" style="margin:0">${n.c}</span></td><td class="l"><button class="tt" data-nv="${i}">${esc(n.t)}</button></td><td>${n.w}</td><td class="num">${n.d}</td><td class="num">${n.v}</td></tr>`)}
-    <div class="paging"><span class="on">1</span><span>2</span><span>3</span></div>`;
+    const NS=notices();
+    if(S.noticeView!==null&&NS[S.noticeView]){const n=NS[S.noticeView];return `<div class="view"><div class="vh"><h5>[${n.c}] ${esc(n.t)}</h5><p>작성자 ${n.w} · 등록일 ${n.d} · 조회 ${n.v}</p></div><div class="vb">${esc(n.b)}</div></div><div class="btns"><button class="btn line" id="backN">목록</button></div>`}
+    return `<div class="bbar"><p class="tot">전체 <b>${NS.length}</b>건</p><div class="srch"><select aria-label="검색 조건"><option>제목</option><option>내용</option></select><input aria-label="검색어" placeholder="검색어 입력"><button class="btn sm">검색</button></div></div>
+    ${boardList(NS,[["번호","70px"],["분류","80px"],["제목"],["작성자","120px"],["등록일","110px"],["조회","70px"]],(n,i)=>`<tr><td class="num">${NS.length-i}</td><td><span class="cat ${catCls(n.c)}" style="margin:0">${n.c}</span></td><td class="l"><button class="tt" data-nv="${i}">${esc(n.t)}</button>${isNew(n.ts)?'<span class="new">N</span>':""}</td><td>${n.w}</td><td class="num">${n.d}</td><td class="num">${n.v}</td></tr>`)}
+    <div class="paging"><span class="on">1</span></div>`;
   },
   newcomer(){
     return `<div class="intro"><b>새로 이사 온 이웃을 소개합니다</b><p class="desc">새 이웃은 다음 동 행사에 초대받아요. 행사에서 반갑게 인사해 주세요.</p></div>
-    ${boardList([["102동 903호","2026.11.08","네 식구예요. 첫째가 초등학교 2학년입니다. 잘 부탁드려요!"],["105동 1104호","2026.11.01","혼자 사는 직장인이에요. 러닝 모임에 들어가고 싶어요."],["201동 302호","2026.10.25","강아지 두 마리와 함께 이사 왔어요."]],[["세대","130px"],["입주일","120px"],["인사말"]],r=>`<tr><td>${r[0]}</td><td class="num">${r[1]}</td><td class="l">${r[2]}</td></tr>`)}
+    ${boardList([["102동 903호",hoursAgo(80),"네 식구예요. 첫째가 초등학교 2학년입니다. 잘 부탁드려요!"],["105동 1104호",hoursAgo(250),"혼자 사는 직장인이에요. 러닝 모임에 들어가고 싶어요."],["201동 302호",hoursAgo(420),"강아지 두 마리와 함께 이사 왔어요."]],[["세대","130px"],["입주일","120px"],["인사말"]],r=>`<tr><td>${r[0]}</td><td class="num">${dotDate(r[1])}</td><td class="l">${r[2]}</td></tr>`)}
     <div class="btns"><button class="btn" id="welcome">환영 인사 남기기 (+5정)</button></div>`;
   },
 },
 events:{
   month(){
-    const ev=S.events[S.selEvent],filled=ev.roles.filter(r=>r[0]).length,mine=ev.dong===S.user.dong;
-    const evd={};Object.values(S.events).forEach(e=>evd[e.date]=e);
-    let rows="";for(let w=0;w<5;w++){rows+="<tr>";for(let i=0;i<7;i++){const d=w*7+i+1;if(d>30){rows+="<td></td>";continue}const e=evd[d];
-      rows+=`<td class="${d===11?"today":""}"><span class="n ${i===0?"sun":i===6?"sat":""}">${d}</span>${e?`<button class="evb ${d<11?"past":""} ${e.id===S.selEvent?"sel":""}" data-ev="${e.id}">${e.title}</button>`:""}</td>`}rows+="</tr>"}
-    const st=ev.status==="done"?'<span class="st end">행사 종료</span>':ev.status==="open"?'<span class="st wait">역할 모집 중</span>':'<span class="st ok">준비 중</span>';
+    if(!LIVE.events.length)return loadingBox();
+    if(!S.selEvent||!evById(S.selEvent))S.selEvent=myDongNext().id;
+    if(!S.calMonth)S.calMonth=TODAY().slice(0,7);
+    const ev=evById(S.selEvent),roles=rolesOf(ev.id),filled=roles.filter(r=>r.ho).length,mine=ev.dong===S.user.dong,past=isPast(ev);
+    const going=goingOf(ev.id),amGoing=going.some(g=>g.user_key===myKey());
+    const evd={};evs().forEach(e=>evd[e.date]=e);
+    const [y,m]=S.calMonth.split("-").map(Number);
+    const rows=monthGrid(S.calMonth,(ds,d,i)=>{const e=evd[ds];return `<td class="${ds===TODAY()?"today":""}"><span class="n ${i===0?"sun":i===6?"sat":""}">${d}</span>${e?`<button class="evb ${isPast(e)?"past":""} ${e.id===S.selEvent?"sel":""}" data-ev="${e.id}">${esc(e.title)}</button>`:""}</td>`});
+    const [stc,stt]=evStatus(ev);
     return `
-    <div class="sect"><h4>2026년 11월 행사 달력</h4><p class="desc">행사명을 누르면 아래에서 상세 내용과 역할 분담 현황을 볼 수 있습니다.</p>
+    <div class="sect"><div class="calnav"><button class="btn line sm" data-cm="-1" aria-label="이전 달">‹ 이전 달</button><h4 style="border:0;padding:0">${y}년 ${m}월 행사 달력</h4><button class="btn line sm" data-cm="1" aria-label="다음 달">다음 달 ›</button></div>
+      <p class="desc">행사명을 누르면 아래에서 상세 내용과 역할 분담 현황을 볼 수 있습니다. ${liveBadge()}</p>
       <div class="tbl-wrap"><table class="cal"><thead><tr><th class="sun">일</th><th>월</th><th>화</th><th>수</th><th>목</th><th>금</th><th class="sat">토</th></tr></thead><tbody>${rows}</tbody></table></div></div>
-    <div class="sect"><h4>행사 상세</h4>
+    <div class="sect" id="evDetail"><h4>행사 상세</h4>
       <div class="evinfo"><div class="ph"></div><div class="bd">
-        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><h5>${ev.title}</h5>${st}</div>
-        <dl><dt>일시</dt><dd>${ev.time}</dd><dt>장소</dt><dd>${ev.place}</dd><dt>주관</dt><dd>${ev.dong} 주민</dd><dt>준비 현황</dt><dd><span class="num">${filled} / ${ev.roles.length}</span> 역할 확정<div class="prog" style="margin-top:4px;max-width:240px"><i style="width:${filled/ev.roles.length*100}%"></i></div></dd></dl>
-        ${ev.status!=="done"?`<div style="display:flex;gap:6px;flex-wrap:wrap">${!mine?`<button class="btn sm ${S.going[ev.id]?"line":""}" data-going="${ev.id}">${S.going[ev.id]?"참여 신청 취소":"손님으로 참여 신청"}</button>`:""}${ev.id==="e2"?`<button class="btn line sm" data-nav="events" data-sub="program">진행 순서 보기</button>`:""}</div>`:""}
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><h5>${esc(ev.title)}</h5><span class="st ${stc}">${stt}</span>${past?"":`<span class="st ok">${dday(ev)}</span>`}</div>
+        <dl><dt>일시</dt><dd>${evLabel(ev)}</dd><dt>장소</dt><dd>${esc(ev.place)}</dd><dt>주관</dt><dd>${ev.dong} 주민</dd>
+          <dt>준비 현황</dt><dd><span class="num">${filled} / ${roles.length}</span> 역할 확정<div class="prog" style="margin-top:4px;max-width:240px"><i style="width:${roles.length?filled/roles.length*100:0}%"></i></div></dd>
+          <dt>손님</dt><dd><b class="num">${going.length}</b>세대 참여 예정${amGoing?" (우리 집 포함)":""}</dd></dl>
+        ${past?"":`<div style="display:flex;gap:6px;flex-wrap:wrap">${!mine?`<button class="btn sm ${amGoing?"line":""}" data-going="${ev.id}">${amGoing?"참여 신청 취소":"손님으로 참여 신청 (+10정)"}</button>`:""}${mine?`<button class="btn line sm" data-nav="events" data-sub="program">진행 순서 보기</button>`:""}</div>`}
       </div></div></div>
-    <div class="sect"><h4>역할 분담 현황</h4><p class="desc">${mine?"우리 동 행사입니다. 비어 있는 역할을 신청하거나 새 부스를 제안해 주세요.":`역할은 ${ev.dong} 주민이 맡고, 다른 동 이웃은 손님으로 참여합니다.`}</p>
-      ${boardList(ev.roles,[["번호","70px"],["담당 세대","120px"],["역할"],["상태","110px"],["신청","110px"]],(r,i)=>{const isMe=r[0]===me();
-        return `<tr class="${isMe?"mine":!r[0]?"open":""}"><td class="num">${i+1}</td><td>${r[0]?r[0]:"-"}</td><td class="l">${esc(r[1])}</td><td>${r[0]?'<span class="st ok">확정</span>':'<span class="st wait">모집 중</span>'}</td><td>${isMe&&ev.status!=="done"?`<button class="btn line sm" data-cancel="${i}">취소</button>`:!r[0]&&mine?`<button class="btn sm" data-take="${i}">신청</button>`:"-"}</td></tr>`})}
-      ${mine&&ev.status!=="done"?'<div class="btns"><button class="btn line" id="propose">새 부스·역할 제안</button></div>':""}
-    </div>`;
+    <div class="sect"><h4>역할 분담 현황</h4><p class="desc">${past?"끝난 행사입니다.":mine?"우리 동 행사입니다. 비어 있는 역할을 신청하거나 새 부스를 제안해 주세요. (역할 신청 +30정)":`역할은 ${ev.dong} 주민이 맡고, 다른 동 이웃은 손님으로 참여합니다.`}</p>
+      ${boardList(roles,[["번호","64px"],["담당 세대","110px"],["역할"],["상태","100px"],["신청","100px"]],(r,i)=>{const isMe=r.taken_key===myKey();
+        return `<tr class="${isMe?"mine":!r.ho?"open":""}"><td class="num">${i+1}</td><td>${r.ho?esc(r.ho)+(isMe?" (나)":""):"-"}</td><td class="l">${esc(r.label)}${r.proposed?' <span class="cat g" style="margin:0 0 0 4px">제안</span>':""}</td><td>${r.ho?'<span class="st ok">확정</span>':past?'<span class="st end">미배정</span>':'<span class="st wait">모집 중</span>'}</td><td>${isMe&&!past?`<button class="btn line sm" data-cancel="${r.id}">취소</button>`:!r.ho&&mine&&!past?`<button class="btn sm" data-take="${r.id}">신청</button>`:"-"}</td></tr>`})}
+      ${mine&&!past?'<div class="btns"><button class="btn line" id="propose">새 부스·역할 제안</button></div>':""}
+    </div>
+    <div class="sect"><h4>다가오는 행사</h4>
+      ${boardList(nextEvents().slice(0,6),[["날짜","130px"],["주관","80px"],["행사"],["상태","140px"],["","90px"]],e=>{const [c,t]=evStatus(e);return `<tr class="${e.id===S.selEvent?"mine":""}"><td class="num">${evDay(e)}</td><td>${e.dong}</td><td class="l">${esc(e.title)}</td><td><span class="st ${c}">${t}</span></td><td><button class="btn line sm" data-ev="${e.id}">보기</button></td></tr>`})}</div>`;
   },
   program(){
+    if(!LIVE.events.length)return loadingBox();
+    const ev=myDongNext();
     const tl=[["16:00","오프닝 · 우리 동 소개","주관 동 세대가 한 줄씩 자기소개","관심사 소개"],["16:15","이웃 장터","음식·나눔 부스 운영, 관심사 명찰과 이웃 빙고판 배부","관심사 명찰, 이웃 빙고"],["17:00","층별 대항 미니게임","같은 층이 한 팀이 되어 이웃 퀴즈·제기차기·몸으로 말해요","층별 팀 구성"],["17:40","이웃 한 상","부스 음식을 긴 공용 테이블에 모아 함께 식사","번호표 랜덤 좌석"],["18:20","해줄게요 / 필요해요 벽","포스트잇으로 도움을 주고받을 이웃 연결","현장 매칭"],["18:40","시상 · 바통 전달식","빙고 완성자·인사왕 시상, 다음 주관 동에 바통 전달, 단체사진","동 릴레이"]];
-    return `<div class="intro"><b>${S.events.e2.title} · ${S.events.e2.time}</b><p class="desc">파는 시간보다 함께하는 시간이 긴 행사입니다. 행사가 끝날 때 이름을 아는 이웃이 3명 이상 생기는 것이 목표예요.</p></div>
-    <div class="sect"><h4>진행 순서</h4>${boardList(tl,[["시간","90px"],["프로그램","190px"],["내용"],["교류 장치","150px"]],r=>`<tr><td class="num"><b style="color:var(--blue)">${r[0]}</b></td><td class="l"><b style="font-weight:500">${r[1]}</b></td><td class="l">${r[2]}</td><td>${r[3]}</td></tr>`)}</div>
+    return `<div class="intro"><b>${esc(ev.title)} · ${evLabel(ev)}</b><p class="desc">파는 시간보다 함께하는 시간이 긴 행사입니다. 행사가 끝날 때 이름을 아는 이웃이 3명 이상 생기는 것이 목표예요.</p></div>
+    <div class="sect"><h4>진행 순서 (예시)</h4>${boardList(tl,[["시간","90px"],["프로그램","190px"],["내용"],["교류 장치","150px"]],r=>`<tr><td class="num"><b style="color:var(--blue)">${r[0]}</b></td><td class="l"><b style="font-weight:500">${r[1]}</b></td><td class="l">${r[2]}</td><td>${r[3]}</td></tr>`)}</div>
     <div class="sect"><h4>이웃 빙고판</h4><p class="desc">칸을 모두 채우면 정 포인트 50점! 아래 칸을 눌러 미리 체험해 보세요.</p>
-      <div class="tbl-wrap"><table class="tbl" style="table-layout:fixed;min-width:420px"><tbody>${[["같은 층 이웃과 인사하기","반려동물 키우는 이웃 찾기","10년 넘게 산 이웃 찾기"],["다른 동 이웃과 음식 나눠 먹기","나와 취미가 같은 이웃 찾기","어린이 판매자에게 물건 사기"],["처음 본 이웃 이름 3명 외우기","다음 행사 투표하기","단체사진 함께 찍기"]].map((r,ri)=>`<tr>${r.map((c,ci)=>`<td style="height:76px;padding:6px"><button data-bingo="${ri*3+ci}" class="tt" style="width:100%;height:100%;text-align:center;${S.bingo&&S.bingo[ri*3+ci]?"background:#eef4ff;color:var(--blue);font-weight:700":""}">${S.bingo&&S.bingo[ri*3+ci]?"✓ ":""}${c}</button></td>`).join("")}</tr>`).join("")}</tbody></table></div></div>`;
+      <div class="tbl-wrap"><table class="tbl bingo" style="table-layout:fixed"><tbody>${[["같은 층 이웃과 인사하기","반려동물 키우는 이웃 찾기","10년 넘게 산 이웃 찾기"],["다른 동 이웃과 음식 나눠 먹기","나와 취미가 같은 이웃 찾기","어린이 판매자에게 물건 사기"],["처음 본 이웃 이름 3명 외우기","다음 행사 투표하기","단체사진 함께 찍기"]].map((r,ri)=>`<tr>${r.map((c,ci)=>`<td style="height:76px;padding:6px"><button data-bingo="${ri*3+ci}" class="tt" style="width:100%;height:100%;text-align:center;${S.bingo&&S.bingo[ri*3+ci]?"background:#eef4ff;color:var(--blue);font-weight:700":""}">${S.bingo&&S.bingo[ri*3+ci]?"✓ ":""}${c}</button></td>`).join("")}</tr>`).join("")}</tbody></table></div></div>`;
   },
   review(){
-    const g=[["207동 푸드트럭 데이","떡볶이 부스가 1시간 만에 완판됐어요","102동 102호","10% 70%"],["207동 푸드트럭 데이","회오리감자 줄이 제일 길었어요","207동 404호","45% 65%"],["207동 푸드트럭 데이","처음 인사한 이웃이 여섯 명이나 생겼어요","105동 1203호","80% 75%"],["101동 가을 야시장","층별 퀴즈에서 우리 층이 1등!","101동 702호","60% 30%"],["203동 단지 텃밭 수확","아이들과 고구마를 같이 캤어요","203동 502호","95% 85%"],["105동 여름밤 영화 상영","돗자리 옆자리 이웃과 친해졌어요","105동 301호","25% 40%"]];
+    const g=[["207동 푸드트럭 데이","떡볶이 부스가 1시간 만에 완판됐어요","102동 102호","10% 70%"],["207동 푸드트럭 데이","회오리감자 줄이 제일 길었어요","207동 404호","45% 65%"],["102동 이웃 한 상 (가을)","처음 인사한 이웃이 여섯 명이나 생겼어요","105동 1203호","80% 75%"],["105동 야시장","층별 퀴즈에서 우리 층이 1등!","105동 702호","60% 30%"],["203동 단지 텃밭 수확","아이들과 고구마를 같이 캤어요","203동 502호","95% 85%"],["105동 여름밤 영화 상영","돗자리 옆자리 이웃과 친해졌어요","105동 301호","25% 40%"]];
     return `<div class="bbar"><p class="tot">전체 <b>${g.length}</b>건</p><button class="btn" id="writeReview">후기 쓰기 (+10정)</button></div>
     <ul class="pgal">${g.map(x=>`<li><div class="th" style="background-position:${x[3]}"></div><div class="cp"><b style="font-weight:500">${x[1]}</b><span>${x[0]} · ${x[2]}</span></div></li>`).join("")}</ul>`;
   },
   vote(){
-    const tot=S.votes.reduce((a,v)=>a+v.n,0);
-    return `<div class="intro"><b>12월 첫째 주 201동 행사 주제 투표</b><p class="desc">투표 기간 2026.11.05 ~ 11.20 · 모든 동 주민이 참여할 수 있습니다.</p></div>
-    <ul class="vote">${S.votes.map((v,i)=>`<li><button data-vote="${i}" class="${S.myVote===i?"on":""}"><span class="rd"></span><span>${v.t}</span><span class="num" style="color:var(--muted);font-size:.85rem">${v.n}표 (${Math.round(v.n/tot*100)}%)</span><span class="bar"><i style="width:${v.n/tot*100}%"></i></span></button></li>`).join("")}</ul>
-    <p class="desc">${S.myVote===null?"항목을 선택하면 바로 투표됩니다.":"투표가 완료되었습니다. 다른 항목을 누르면 변경됩니다."}</p>`;
+    const c=pollCounts(),tot=c.reduce((a,b)=>a+b,0),mv=myVote();
+    return `<div class="intro"><b>${POLL.title}</b><p class="desc">${POLL.period}</p></div>
+    <ul class="vote">${POLL.opts.map((t,i)=>`<li><button data-vote="${i}" class="${mv===i?"on":""}"><span class="rd"></span><span>${t}${mv===i?" <small style='color:var(--blue)'>(내 선택)</small>":""}</span><span class="num" style="color:var(--muted);font-size:.85rem">${c[i]}표 (${Math.round(c[i]/tot*100)}%)</span><span class="bar"><i style="width:${c[i]/tot*100}%"></i></span></button></li>`).join("")}</ul>
+    <p class="desc">${mv===null?"항목을 선택하면 바로 투표됩니다. 한 세대에 한 표예요.":"투표가 완료되었습니다. 다른 항목을 누르면 변경됩니다."} 총 <b class="num">${tot}</b>표 ${liveBadge()}</p>`;
   },
 },
+
 share:{_(){return boardPage("share")}},
 suggest:{_(){return boardPage("suggest")}},
 clubs:{list(){
-  return `<div class="intro"><b>같은 단지 이웃과 가볍게 만나요</b><p class="desc">3명 이상 모이면 새 소모임을 만들 수 있고, 커뮤니티룸 예약도 함께 신청됩니다.</p></div>
-  ${boardList(S.clubs,[["분야","90px"],["모임명"],["일시","150px"],["장소","150px"],["인원","90px"],["가입","110px"]],(c,i)=>`<tr class="${c.joined?"mine":""}"><td><span class="cat ${c.tag==="청년"?"o":""}" style="margin:0">${c.tag}</span></td><td class="l">${c.n}</td><td>${c.w}</td><td>${c.p}</td><td class="num">${c.m}/${c.max}</td><td><button class="btn sm ${c.joined?"line":""}" data-club="${i}" ${!c.joined&&c.m>=c.max?"disabled":""}>${c.joined?"탈퇴":c.m>=c.max?"마감":"가입"}</button></td></tr>`)}
-  <div class="btns"><button class="btn line" id="newClub">새 소모임 제안</button></div>`;
+  if(!LIVE.clubs.length)return loadingBox();
+  return `<div class="intro"><b>같은 단지 이웃과 가볍게 만나요</b><p class="desc">가입하면 정 포인트 15점! 새 소모임을 만들면 커뮤니티룸 예약도 함께 신청됩니다. ${liveBadge()}</p></div>
+  ${boardList(clubsSorted(),[["분야","90px"],["모임명"],["일시","150px"],["장소","140px"],["인원","80px"],["가입","90px"]],c=>{const n=clubCount(c),j=inClub(c);return `<tr class="${j?"mine":""}"><td><span class="cat ${c.tag==="청년"||c.tag==="신규"?"o":""}" style="margin:0">${esc(c.tag)}</span></td><td class="l">${esc(c.name)}</td><td>${esc(c.when_text)}</td><td>${esc(c.place)}</td><td class="num">${n}/${c.max_members}</td><td><button class="btn sm ${j?"line":""}" data-club="${c.id}" ${!j&&n>=c.max_members?"disabled":""}>${j?"탈퇴":n>=c.max_members?"마감":"가입"}</button></td></tr>`})}
+  <div class="btns"><button class="btn line" id="newClub">새 소모임 만들기</button></div>`;
 }},
 points:{
-  rank(){const arr=Object.entries(S.dongs).sort((a,b)=>b[1]-a[1]),max=arr[0][1];
-    return `<div class="intro"><b>11월 동별 정 순위</b><p class="desc">매달 1위 동에는 <b>상금 50만 원</b>을 드립니다. 다음 동 행사 재료비나 동 주민 회식 등 동 주민이 정한 곳에 쓸 수 있어요.</p></div>
-    ${boardList(arr,[["순위","80px"],["동","100px"],["누적 포인트"],["점수","110px"]],([d,p],i)=>`<tr class="${d===S.user.dong?"mine":""}"><td class="num"><b>${i+1}</b></td><td>${d}${d===S.user.dong?" (우리 동)":""}</td><td><div class="rankbar"><i style="width:${p/max*100}%"></i></div></td><td class="num">${p}정</td></tr>`)}`},
-  mine(){const roles=Object.values(S.events).some(e=>e.roles.some(r=>r[0]===me()));
-    return `<div class="ptbox"><div><span>보유 포인트</span><b class="num">${S.points}</b></div><div><span>우리 동 순위</span><b class="num">${rankOf(S.user.dong)}위</b></div><div><span>이번 달 활동</span><b class="num">${S.history.length}회</b></div></div>
-    <div class="sect"><h4>적립 내역</h4>${boardList(S.history,[["일자","120px"],["내용"],["포인트","100px"]],h=>`<tr><td class="num">${h.d}</td><td class="l">${esc(h.t)}</td><td class="num" style="color:var(--blue)">+${h.p}</td></tr>`)}</div>
-    <div class="sect"><h4>획득 배지</h4><p class="desc">첫 인사 · ${roles?"장터 일꾼 · ":""}${S.clubs.some(c=>c.joined)?"모임 멤버 · ":""}${S.points>=300?"정 부자":""}</p></div>`},
-  guide(){return boardList([["동 행사 역할 맡기","30정","행사 종료 후 지급"],["다른 동 행사 손님 참여","10정","참여 신청 기준"],["이웃 빙고 완성","50정","행사 당일 확인"],["나눔·품앗이 완료","20정","작성자·참여자 모두"],["행사 후기 작성","10정","행사당 1회"],["소모임 가입·개설","15정","모임당 1회"],["새 이웃 환영 인사","5정","세대당 1회"]],[["활동"],["포인트","100px"],["비고","180px"]],r=>`<tr><td class="l">${r[0]}</td><td class="num" style="color:var(--blue);font-weight:500">${r[1]}</td><td>${r[2]}</td></tr>`)+`<p class="desc">매달 동별 순위 1위 동에는 상금 50만 원을 드립니다.</p>`},
+  rank(){const arr=Object.entries(dongTotals()).sort((a,b)=>b[1]-a[1]),max=arr[0][1],mo=new Date().getMonth()+1;
+    return `<div class="intro"><b>${mo}월 동별 정 순위</b><p class="desc">매달 1위 동에는 <b>상금 50만 원</b>을 드립니다. 다음 동 행사 재료비나 동 주민 회식 등 동 주민이 정한 곳에 쓸 수 있어요. ${liveBadge()}</p></div>
+    ${boardList(arr,[["순위","70px"],["동","110px"],["누적 포인트"],["점수","100px"]],([d,p],i)=>`<tr class="${d===S.user.dong?"mine":""}"><td class="num"><b>${i+1}</b></td><td>${d}${d===S.user.dong?" (우리 동)":""}</td><td><div class="rankbar"><i style="width:${p/max*100}%"></i></div></td><td class="num">${p}정</td></tr>`)}`},
+  mine(){const H=myPts(),mo=TODAY().slice(0,7),roles=LIVE.roles.some(r=>r.taken_key===myKey()),P=myPoints();
+    const badges=[["첫 인사",true],["장터 일꾼",roles],["모임 멤버",LIVE.clubs.some(inClub)],["행사 손님",LIVE.going.some(g=>g.user_key===myKey())],["정 부자 (300정)",P>=300]];
+    return `<div class="ptbox"><div><span>보유 포인트</span><b class="num">${P}</b></div><div><span>우리 동 순위</span><b class="num">${rankOf(S.user.dong)}위</b></div><div><span>이번 달 활동</span><b class="num">${H.filter(h=>ymd(new Date(h.created_at)).slice(0,7)===mo).length}회</b></div></div>
+    <div class="sect"><h4>적립 내역</h4>${boardList(H,[["일자","120px"],["내용"],["포인트","90px"]],h=>`<tr><td class="num">${dotDate(new Date(h.created_at).getTime())}</td><td class="l">${esc(h.reason)}</td><td class="num" style="color:${h.points<0?"#c0392b":"var(--blue)"}">${h.points>0?"+":""}${h.points}</td></tr>`)}</div>
+    <div class="sect"><h4>배지</h4><div class="badges">${badges.map(([n,on])=>`<span class="bdg ${on?"on":""}">${on?"★":"☆"} ${n}</span>`).join("")}</div></div>`},
+  guide(){return boardList([["동 행사 역할 맡기 · 새 역할 제안","30정","취소하면 회수"],["다른 동 행사 손님 참여","10정","취소하면 회수"],["이웃 빙고 완성","50정","행사 당일 확인"],["나눔·품앗이 글 등록","20정",""],["건의함 의견 등록","10정",""],["행사 후기 작성","10정",""],["소모임 가입·개설","15정","탈퇴하면 회수"],["새 이웃 환영 인사","5정",""]],[["활동"],["포인트","100px"],["비고","160px"]],r=>`<tr><td class="l">${r[0]}</td><td class="num" style="color:var(--blue);font-weight:500">${r[1]}</td><td>${r[2]||"-"}</td></tr>`)+`<p class="desc">내 활동 포인트는 우리 동 점수에도 그대로 더해져요. 매달 동별 순위 1위 동에는 상금 50만 원을 드립니다.</p>`},
 },
 my:{
-  act(){const roles=Object.values(S.events).flatMap(e=>e.roles.filter(r=>r[0]===me()).map(r=>[e.title,r[1]]));
-    return `<div class="sect"><h4>세대 정보</h4>${boardList([[S.user.dong,S.user.ho,"관리사무소 인증 완료",S.points+"정"]],[["동"],["호수"],["인증"],["정 포인트"]],r=>`<tr>${r.map(x=>`<td>${x}</td>`).join("")}</tr>`)}</div>
-    <div class="sect"><h4>맡은 행사 역할</h4>${boardList(roles,[["행사","220px"],["역할"]],r=>`<tr><td>${r[0]}</td><td class="l">${esc(r[1])}</td></tr>`)}</div>
-    <div class="sect"><h4>참여 예정 행사 · 가입한 소모임</h4>${boardList([...Object.keys(S.going).filter(k=>S.going[k]).map(k=>["행사",S.events[k].title]),...S.clubs.filter(c=>c.joined).map(c=>["소모임",c.n])],[["구분","120px"],["이름"]],r=>`<tr><td>${r[0]}</td><td class="l">${r[1]}</td></tr>`)}</div>`},
+  act(){const roles=LIVE.roles.filter(r=>r.taken_key===myKey()).map(r=>({r,e:evById(r.event_id)})).filter(x=>x.e).sort((a,b)=>a.e.date<b.e.date?-1:1);
+    const going=LIVE.going.filter(g=>g.user_key===myKey()).map(g=>evById(g.event_id)).filter(Boolean);
+    return `<div class="sect"><h4>세대 정보</h4>${boardList([[S.user.dong,S.user.ho,"관리사무소 인증 완료",myPoints()+"정"]],[["동"],["호수"],["인증"],["정 포인트"]],r=>`<tr>${r.map(x=>`<td>${x}</td>`).join("")}</tr>`)}</div>
+    <div class="sect"><h4>맡은 행사 역할</h4>${boardList(roles,[["날짜","130px"],["행사","200px"],["역할"]],x=>`<tr><td class="num">${evDay(x.e)}</td><td>${esc(x.e.title)}</td><td class="l">${esc(x.r.label)}${isPast(x.e)?' <span class="st end">종료</span>':""}</td></tr>`)}</div>
+    <div class="sect"><h4>참여 예정 행사 · 가입한 소모임</h4>${boardList([...going.map(e=>["행사",`${evDay(e)} ${e.title}`]),...LIVE.clubs.filter(inClub).map(c=>["소모임",c.name])],[["구분","120px"],["이름"]],r=>`<tr><td>${r[0]}</td><td class="l">${esc(r[1])}</td></tr>`)}</div>`},
   set(){const row=(k,l,d)=>`<div class="setrow"><span>${l}<small>${d}</small></span><button class="sw" role="switch" aria-checked="${S.settings[k]}" aria-label="${l}" data-set="${k}"></button></div>`;
-    return `<div class="sect"><h4>공개 범위</h4><div>${row("showHo","호수 공개","끄면 게시글에 '102동 주민'으로만 표시됩니다")}${row("showClubs","가입한 소모임 공개","새 이웃 소개 화면에 함께 보여줍니다")}</div></div>
+    return `<div class="sect"><h4>공개 범위</h4><div>${row("showHo","호수 공개",`끄면 게시글에 '${S.user.dong} 주민'으로만 표시됩니다`)}${row("showClubs","가입한 소모임 공개","새 이웃 소개 화면에 함께 보여줍니다")}</div></div>
     <div class="sect"><h4>알림 · 화면</h4><div>${row("alarm","행사 알림 받기","우리 동 행사 역할 모집이 열리면 알려드립니다")}${row("big","큰 글씨 모드","글자를 크게 키워 어르신도 편하게 보실 수 있습니다")}</div></div>
     <div class="intro"><b>커뮤니티 운영규칙</b><p class="desc">실제 거주 세대만 가입할 수 있습니다. 욕설·광고·개인정보 노출 글은 신고 후 운영위원회가 확인해 가립니다. 층간소음 등 갈등은 관리사무소 상담 창구를 이용해 주세요.</p></div>`},
 },
 };
+
 
 /* ---------- 실시간 게시판 화면 (나눔·품앗이 / 건의함) ---------- */
 function catCls(c){return ({"품앗이":"o","행사":"o","공동구매":"g","투표":"g","기타":"g"})[c]||""}
@@ -874,31 +1054,34 @@ const on=(sel,fn)=>document.querySelectorAll(sel).forEach(b=>b.onclick=()=>fn(b)
 const BIND={
 home(){
   on("[data-htab]",b=>{S.homeTab=+b.dataset.htab;render()});
-  on("[data-open]",b=>{const [k,i]=b.dataset.open.split(":");if(k==="n"){go("news","notice");S.noticeView=+i}else{go(k);S.postView=i}render()});
+  on("[data-open]",b=>{const [k,i]=b.dataset.open.split(":");if(k==="n"){go("news","notice");S.noticeView=+i;S.noticeViews[+i]=(S.noticeViews[+i]||0)+1}else{go(k);S.postView=i}render()});
+  on("[data-goev]",b=>{const e=evById(b.dataset.goev);S.selEvent=e.id;S.calMonth=e.date.slice(0,7);go("events","month")});
 },
+about(){},
 news(){
-  on("[data-nv]",b=>{S.noticeView=+b.dataset.nv;S.notices[S.noticeView].v++;render()});
+  on("[data-nv]",b=>{S.noticeView=+b.dataset.nv;S.noticeViews[S.noticeView]=(S.noticeViews[S.noticeView]||0)+1;render()});
   $("#backN")&&($("#backN").onclick=()=>{S.noticeView=null;render()});
   $("#welcome")&&($("#welcome").onclick=()=>modal("새 이웃에게 환영 인사","<div class='f'><label for='wm'>인사말</label><textarea id='wm' name='m' rows='3' required></textarea></div>","남기기",fd=>{if(!(fd.get("m")||"").trim())return false;addPoints(5,"새 이웃 환영 인사")}));
 },
 events(){
-  const ev=S.events[S.selEvent];
-  on("[data-ev]",b=>{S.selEvent=b.dataset.ev;render()});
-  on("[data-take]",b=>{if(ev.roles.some(r=>r[0]===me())){toast("한 행사에서는 역할을 하나만 신청할 수 있습니다.");return}ev.roles[+b.dataset.take][0]=me();addPoints(30,`${ev.title} 역할 신청`);render()});
-  on("[data-cancel]",b=>{ev.roles[+b.dataset.cancel][0]=null;subPoints(30);toast("역할 신청을 취소했습니다.");render()});
-  on("[data-going]",b=>{const id=b.dataset.going;S.going[id]=!S.going[id];if(S.going[id])addPoints(10,`${S.events[id].title} 손님 참여`);else{subPoints(10);toast("참여 신청을 취소했습니다.")}render()});
-  on("[data-vote]",b=>{const i=+b.dataset.vote;if(S.myVote!==null)S.votes[S.myVote].n--;S.votes[i].n++;S.myVote=i;toast("투표가 완료되었습니다.");render()});
+  on("[data-ev]",b=>{const e=evById(b.dataset.ev);S.selEvent=e.id;S.calMonth=e.date.slice(0,7);render();const d=$("#evDetail");d&&d.scrollIntoView({behavior:"smooth",block:"start"})});
+  on("[data-cm]",b=>{const [y,m]=S.calMonth.split("-").map(Number),d=new Date(y,m-1+(+b.dataset.cm),1);S.calMonth=`${d.getFullYear()}-${pad(d.getMonth()+1)}`;render()});
+  on("[data-take]",b=>{b.disabled=true;act("take_role",{p_role:b.dataset.take},"역할을 맡았어요! 정 포인트 +30")});
+  on("[data-cancel]",b=>{b.disabled=true;act("cancel_role",{p_role:b.dataset.cancel},"역할 신청을 취소했어요.")});
+  on("[data-going]",b=>{b.disabled=true;act("toggle_going",{p_event:b.dataset.going},r=>r==="joined"?"손님으로 참여 신청했어요! 정 포인트 +10":"참여 신청을 취소했어요.")});
+  on("[data-vote]",b=>{act("cast_vote",{p_poll:POLL.id,p_option:+b.dataset.vote},"투표가 반영되었어요.")});
   on("[data-bingo]",b=>{S.bingo=S.bingo||Array(9).fill(false);const i=+b.dataset.bingo;S.bingo[i]=!S.bingo[i];if(S.bingo.every(x=>x)&&!S.bingoDone){S.bingoDone=true;addPoints(50,"이웃 빙고 완성")}render()});
-  $("#propose")&&($("#propose").onclick=()=>modal("새 부스·역할 제안","<div class='f'><label for='pm'>맡고 싶은 부스나 역할</label><input id='pm' name='m' required placeholder='예: 군고구마 부스, 포토존 꾸미기'></div>","제안하기",fd=>{const m=(fd.get("m")||"").trim();if(!m)return false;ev.roles.push([me(),m,1]);addPoints(30,`${ev.title} 새 역할 제안`);render()}));
-  $("#writeReview")&&($("#writeReview").onclick=()=>modal("행사 후기 쓰기","<div class='f'><label for='rv'>행사</label><select id='rv'><option>207동 푸드트럭 데이</option></select></div><div class='f'><label for='rt'>후기</label><textarea id='rt' name='r' rows='3' required placeholder='어떤 이웃을 만났나요?'></textarea></div><div class='f'><label for='rf'>사진 첨부</label><input id='rf' type='file' accept='image/*'></div>","등록",fd=>{if(!(fd.get("r")||"").trim())return false;addPoints(10,"207동 푸드트럭 데이 후기 작성")}));
+  $("#propose")&&($("#propose").onclick=()=>modal("새 부스·역할 제안","<div class='f'><label for='pm'>맡고 싶은 부스나 역할</label><input id='pm' name='m' required maxlength='40' placeholder='예: 군고구마 부스, 포토존 꾸미기'></div><p class='desc'>제안하면 내가 바로 그 역할을 맡게 돼요. (+30정)</p>","제안하기",fd=>{const m=(fd.get("m")||"").trim();if(!m)return false;act("propose_role",{p_event:S.selEvent,p_label:m},"새 역할을 제안하고 맡았어요! 정 포인트 +30")}));
+  $("#writeReview")&&($("#writeReview").onclick=()=>modal("행사 후기 쓰기",`<div class='f'><label for='rv'>행사</label><select id='rv'>${evs().filter(isPast).reverse().map(e=>`<option>${esc(e.title)}</option>`).join("")}</select></div><div class='f'><label for='rt'>후기</label><textarea id='rt' name='r' rows='3' required placeholder='어떤 이웃을 만났나요?'></textarea></div><div class='f'><label for='rf'>사진 첨부</label><input id='rf' type='file' accept='image/*'></div>`,"등록",fd=>{if(!(fd.get("r")||"").trim())return false;addPoints(10,($("#rv")?$("#rv").value:"행사")+" 후기 작성")}));
 },
 share(){bindBoard("share")},
 suggest(){bindBoard("suggest")},
 clubs(){
-  on("[data-club]",b=>{const c=S.clubs[+b.dataset.club];c.joined=!c.joined;if(c.joined){c.m++;addPoints(15,`${c.n} 가입`)}else{c.m--;subPoints(15);toast("모임에서 탈퇴했습니다.")}render()});
-  $("#newClub").onclick=()=>modal("새 소모임 제안",`<div class="f"><label for="cn">모임명</label><input id="cn" name="n" required placeholder="예: 주말 베이킹 모임"></div><div class="r2"><div class="f"><label for="cw">일시</label><input id="cw" name="w" placeholder="격주 일 14:00"></div><div class="f"><label for="cp">장소</label><input id="cp" name="p" placeholder="커뮤니티룸"></div></div>`,"제안하기",fd=>{
-    const n=(fd.get("n")||"").trim();if(!n)return false;S.clubs.push({n,w:(fd.get("w")||"").trim()||"조율 중",p:(fd.get("p")||"").trim()||"조율 중",m:1,max:10,joined:true,tag:"신규"});addPoints(15,`${n} 소모임 개설`);render()});
+  on("[data-club]",b=>{b.disabled=true;act("toggle_club",{p_club:b.dataset.club},r=>r==="joined"?"소모임에 가입했어요! 정 포인트 +15":"소모임에서 탈퇴했어요.")});
+  $("#newClub").onclick=()=>modal("새 소모임 만들기",`<div class="f"><label for="cn">모임명</label><input id="cn" name="n" required maxlength="30" placeholder="예: 주말 베이킹 모임"></div><div class="r2"><div class="f"><label for="cw">일시</label><input id="cw" name="w" maxlength="30" placeholder="격주 일 14:00"></div><div class="f"><label for="cp">장소</label><input id="cp" name="p" maxlength="30" placeholder="커뮤니티룸"></div></div>`,"만들기",fd=>{
+    const n=(fd.get("n")||"").trim();if(!n)return false;act("create_club",{p_name:n,p_when:fd.get("w")||"",p_place:fd.get("p")||""},"새 소모임을 만들었어요! 정 포인트 +15")});
 },
+points(){},
 my(){on("[data-set]",b=>{const k=b.dataset.set;S.settings[k]=!S.settings[k];if(k==="big")document.documentElement.classList.toggle("big",S.settings.big);render()})},
 };
 </script>
