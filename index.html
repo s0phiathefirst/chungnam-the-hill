@@ -323,6 +323,8 @@ tr.mine .rankbar i{background:var(--point)}
   .calnav h4{font-size:1rem;order:-1;width:100%}
   .quick button{font-size:.82rem;padding:14px 4px 12px}
 }
+.galbtn{display:block;width:100%;border:0;padding:0;background:none;text-align:left}
+.galbtn:hover .cp b{color:var(--blue);text-decoration:underline}
 /* 푸터 */
 footer.ft{background:#2b2f36;color:#a7adb7;font-size:.82rem}
 .ft .links{border-bottom:1px solid #3c414a}
@@ -781,7 +783,7 @@ function HOME(){
   const evd={};evs().forEach(e=>evd[e.date]=e);
   const cal=monthGrid(ym,(ds,d,i)=>`<td class="${evd[ds]?"ev":ds===TODAY()?"today":""} ${i===0?"sun":i===6?"sat":""}">${evd[ds]?`<b title="${esc(evd[ds].title)}">${d}</b>`:ds===TODAY()?`<b>${d}</b>`:d}</td>`);
   const upList=nextEvents().slice(0,4);
-  const gal=[["207동 푸드트럭 데이","2026.11.07","10% 70%"],["101동 가을 야시장","2026.10.24","60% 60%"],["203동 단지 텃밭 수확","2026.10.11","90% 80%"],["105동 여름밤 영화 상영","2026.08.22","35% 35%"]];
+  const gal=[["207동 푸드트럭 데이","2026.11.07","review1.jpg","center 30%"],["102동 이웃 한 상 (가을)","2026.11.14","review3.jpg","center 45%"],["203동 단지 텃밭 수확","2026.10.11","review5.jpg","center 60%"],["105동 여름밤 영화 상영","2026.08.22","review6.jpg","center 70%"]];
   return `
   <section class="mv"><div class="wrap">
     <small>CHUNGNAM THE HILL · 정(情)의 재분배</small>
@@ -821,7 +823,7 @@ function HOME(){
   </div></section>
   <section class="gal-sec"><div class="wrap">
     <div class="box-h" style="border-color:var(--ink)"><h3>행사 포토갤러리</h3><button class="more" aria-label="더보기" data-nav="events" data-sub="review">+</button></div>
-    <ul class="gal" style="margin-top:14px">${gal.map(g=>`<li><div class="th" style="background-position:${g[2]}"></div><div class="cp"><b style="font-weight:500">${g[0]}</b><span class="num">${g[1]}</span></div></li>`).join("")}</ul>
+    <ul class="gal" style="margin-top:14px">${gal.map(g=>`<li><button class="galbtn" data-nav="events" data-sub="review" aria-label="${g[0]} 후기 보기"><div class="th" style="background:url(img/${g[2]}) ${g[3]}/cover no-repeat"></div><div class="cp"><b style="font-weight:500">${g[0]}</b><span class="num">${g[1]}</span></div></button></li>`).join("")}</ul>
   </div></section>
   <section class="wrap banners">
     <button data-nav="news" data-sub="newcomer"><b>새 이웃 소개</b><span>102동 903호에 새 가족이 왔어요</span></button>
@@ -935,9 +937,9 @@ events:{
       <div class="tbl-wrap"><table class="tbl bingo" style="table-layout:fixed"><tbody>${[["같은 층 이웃과 인사하기","반려동물 키우는 이웃 찾기","10년 넘게 산 이웃 찾기"],["다른 동 이웃과 음식 나눠 먹기","나와 취미가 같은 이웃 찾기","어린이 판매자에게 물건 사기"],["처음 본 이웃 이름 3명 외우기","다음 행사 투표하기","단체사진 함께 찍기"]].map((r,ri)=>`<tr>${r.map((c,ci)=>`<td style="height:76px;padding:6px"><button data-bingo="${ri*3+ci}" class="tt" style="width:100%;height:100%;text-align:center;${S.bingo&&S.bingo[ri*3+ci]?"background:#eef4ff;color:var(--blue);font-weight:700":""}">${S.bingo&&S.bingo[ri*3+ci]?"✓ ":""}${c}</button></td>`).join("")}</tr>`).join("")}</tbody></table></div></div>`;
   },
   review(){
-    const g=[["207동 푸드트럭 데이","떡볶이 부스가 1시간 만에 완판됐어요","102동 102호","10% 70%"],["207동 푸드트럭 데이","회오리감자 줄이 제일 길었어요","207동 404호","45% 65%"],["102동 이웃 한 상 (가을)","처음 인사한 이웃이 여섯 명이나 생겼어요","105동 1203호","80% 75%"],["105동 야시장","층별 퀴즈에서 우리 층이 1등!","105동 702호","60% 30%"],["203동 단지 텃밭 수확","아이들과 고구마를 같이 캤어요","203동 502호","95% 85%"],["105동 여름밤 영화 상영","돗자리 옆자리 이웃과 친해졌어요","105동 301호","25% 40%"]];
+    const g=[["207동 푸드트럭 데이","떡볶이 부스가 1시간 만에 완판됐어요","102동 102호","review1.jpg","center 30%"],["207동 푸드트럭 데이","회오리감자 줄이 제일 길었어요","207동 404호","review2.jpg","center 30%"],["102동 이웃 한 상 (가을)","처음 인사한 이웃이 여섯 명이나 생겼어요","105동 1203호","review3.jpg","center 45%"],["105동 야시장","층별 퀴즈에서 우리 층이 1등!","105동 702호","review4.jpg","center 35%"],["203동 단지 텃밭 수확","아이들과 고구마를 같이 캤어요","203동 502호","review5.jpg","center 60%"],["105동 여름밤 영화 상영","돗자리 옆자리 이웃과 친해졌어요","105동 301호","review6.jpg","center 70%"]];
     return `<div class="bbar"><p class="tot">전체 <b>${g.length}</b>건</p><button class="btn" id="writeReview">후기 쓰기 (+10정)</button></div>
-    <ul class="pgal">${g.map(x=>`<li><div class="th" style="background-position:${x[3]}"></div><div class="cp"><b style="font-weight:500">${x[1]}</b><span>${x[0]} · ${x[2]}</span></div></li>`).join("")}</ul>`;
+    <ul class="pgal">${g.map(x=>`<li><div class="th" role="img" aria-label="${x[0]} 사진" style="background:url(img/${x[3]}) ${x[4]}/cover no-repeat"></div><div class="cp"><b style="font-weight:500">${x[1]}</b><span>${x[0]} · ${x[2]}</span></div></li>`).join("")}</ul>`;
   },
   vote(){
     const c=pollCounts(),tot=c.reduce((a,b)=>a+b,0),mv=myVote();
